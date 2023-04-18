@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>3D Articulated Model</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div class="gl-canvas-container">
+      <canvas id="gl-canvas" width="800" height="750">
+        Your browser does not support WebGL.
+      </canvas>
+    </div>
+    <div class="all-container">
+      <div class="menu-container">
+        <h1>3D Articulated Model</h1>
+        <div class="help">
+          <a href="help.html"><button id="help-btn">Show Help</button></a>
+          <div class="help-message" id="help-message">
+            <p>
+              Untuk melakukan aksi, pilih aksi yang diinginkan pada kolom
+              actions.
+            </p>
+            <p>Untuk clear canvas, klik tombol Clear.</p>
+            <p>Untuk Save File, klik save.</p>
+            <p>Untuk Load file, klik Load lalu pilih file konfigurasi.</p>
+          </div>
+        </div>
+        <div class="save-or-load">
+          <h2>Save or Load</h2>
+          <div class="save-or-load-input">
+            <button id="save-btn" onclick="saveModel()" type="submit">
+              Save
+            </button>
+            <button
+              id="load-btn"
+              onclick="document.getElementById('load').click()"
+              type="file"
+            >
+              Load
+            </button>
+            <input type="file" name="load" id="load" accept=".json" />
+            <label for="load" id="fileInputLabel">Choose a file</label>
+          </div>
+        </div>
+        <div class="input-slider">
+          <h2>View Control</h2>
+          <table>
+            <tr>
+              <td>Angle X</td>
+              <td>
+                <input
+                  type="range"
+                  id="angleX"
+                  name="angleX"
+                  min="-180"
+                  max="180"
+                  value="0"
+                  step="1"
+                  oninput="updateAngleX()"
+                />
+              </td>
+              <td><label id="angleX-value">0</label></td>
+            </tr>
+            <tr>
+              <td>Angle Y</td>
+              <td>
+                <input
+                  type="range"
+                  id="angleY"
+                  name="angleY"
+                  min="-180"
+                  max="180"
+                  value="0"
+                  step="1"
+                  oninput="updateAngleY()"
+                />
+              </td>
+              <td><label id="angleY-value">0</label></td>
+            </tr>
+            <tr>
+              <td>Angle Z</td>
+              <td>
+                <input
+                  type="range"
+                  id="angleZ"
+                  name="angleZ"
+                  min="-180"
+                  max="180"
+                  value="0"
+                  step="1"
+                  oninput="updateAngleZ()"
+                />
+              </td>
+              <td><label id="angleZ-value">0</label></td>
+            </tr>
+            <tr>
+              <td>Translate X</td>
+              <td>
+                <input
+                  type="range"
+                  id="translateX"
+                  name="translateX"
+                  min="-10"
+                  max="10"
+                  value="0"
+                  step="0.01"
+                  oninput="updateTranslateX()"
+                />
+              </td>
+              <td><label id="translateX-value">0</label></td>
+            </tr>
+            <tr>
+              <td>Translate Y</td>
+              <td>
+                <input
+                  type="range"
+                  id="translateY"
+                  name="translateY"
+                  min="-10"
+                  max="10"
+                  value="0"
+                  step="0.01"
+                  oninput="updateTranslateY()"
+                />
+              </td>
+              <td><label id="translateY-value">0</label></td>
+            </tr>
+            <tr>
+              <td>Translate Z</td>
+              <td>
+                <input
+                  type="range"
+                  id="translateZ"
+                  name="translateZ"
+                  min="-100"
+                  max="1"
+                  value="0"
+                  step="0.01"
+                  oninput="updateTranslateZ()"
+                />
+              </td>
+              <td><label id="translateZ-value">0</label></td>
+            </tr>
+            <tr>
+              <td>Scale X</td>
+              <td>
+                <input
+                  type="range"
+                  id="scaleX"
+                  name="scaleX"
+                  min="0.1"
+                  max="5"
+                  value="1"
+                  step="0.01"
+                  oninput="updateScaleX()"
+                />
+              </td>
+              <td><label id="scaleX-value">1</label></td>
+            </tr>
+            <tr>
+              <td>Scale Y</td>
+              <td>
+                <input
+                  type="range"
+                  id="scaleY"
+                  name="scaleY"
+                  min="0.1"
+                  max="5"
+                  value="1"
+                  step="0.01"
+                  oninput="updateScaleY()"
+                />
+              </td>
+              <td><label id="scaleY-value">1</label></td>
+            </tr>
+            <tr>
+              <td>Scale Z</td>
+              <td>
+                <input
+                  type="range"
+                  id="scaleZ"
+                  name="scaleZ"
+                  min="0.1"
+                  max="5"
+                  value="1"
+                  step="0.01"
+                  oninput="updateScaleZ()"
+                />
+              </td>
+              <td><label id="scaleZ-value">1</label></td>
+            </tr>
+          </table>
+        </div>
+        <h2>Camera Control</h2>
+        <table>
+          <tr>
+            <td>Camera X</td>
+            <td>
+              <input
+                type="range"
+                id="cameraX"
+                name="cameraX"
+                min="-10"
+                max="10"
+                value="0"
+                step="0.01"
+                oninput="updateCameraX()"
+              />
+            </td>
+            <td><label id="cameraX-value">0</label></td>
+          </tr>
+          <tr>
+            <td>Camera Y</td>
+            <td>
+              <input
+                type="range"
+                id="cameraY"
+                name="cameraY"
+                min="-10"
+                max="10"
+                value="0"
+                step="0.01"
+                oninput="updateCameraY()"
+              />
+            </td>
+            <td><label id="cameraY-value">0</label></td>
+          </tr>
+          <tr>
+            <td>Camera Z</td>
+            <td>
+              <input
+                type="range"
+                id="cameraZ"
+                name="cameraZ"
+                min="-10"
+                max="10"
+                value="5"
+                step="0.01"
+                oninput="updateCameraZ()"
+              />
+            </td>
+            <td><label id="cameraZ-value">5</label></td>
+          </tr>
+          <tr>
+            <td>Camera Radius</td>
+            <td>
+              <input
+                type="range"
+                id="cameraRadius"
+                name="cameraRadius"
+                min="0"
+                max="40"
+                value="20"
+                step="1"
+                oninput="updateCameraRadius()"
+              />
+            </td>
+            <td><label id="cameraRadius-value">20</label></td>
+          </tr>
+        </table>
+        <div>
+          <label>Projection Type</label>
+          <select
+            name="projection-type"
+            id="projection-type"
+            onchange="updateProjectionMode()"
+          >
+            <option value="orthographic" selected>Orthographic</option>
+            <option value="perspective">Perspective</option>
+            <option value="oblique">Oblique</option>
+          </select>
+        </div>
+        <div>
+          <button onClick="toggleShading()">Toggle Shading</button>
+          <label id="shading-label">Off</label>
+        </div>
+        <div class="animation">
+          <button id="rotate-x" onclick="rotateToX()">Rotate X</button>
+          <button id="rotate-y" onclick="rotateToY()">Rotate Y</button>
+          <button id="rotate-z" onclick="rotateToZ()">Rotate Z</button>
+          <button id="animation" onclick="toggleAnimation()">Toggle Animation</button> <label id="animation-label">Off</label>
+      </div>
+        <div class="default-input">
+          <button id="default-btn" onclick="resetDefault()" type="submit">
+            Reset Default
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script
+    type="text/javascript"
+    src="https://www.cs.unm.edu/~angel/BOOK/INTERACTIVE_COMPUTER_GRAPHICS/SEVENTH_EDITION/CODE/Common/webgl-utils.js"
+  ></script>
+  <script src="shader.js"></script>
+  <script src="util.js"></script>
+  <script src="matrix4.js"></script>
+  <script src="main.js"></script>
+</html>
