@@ -5,7 +5,7 @@ var colors = [];
 var normals = [];
 var texcoords = [];
 var translation = [0, 0, 0];
-var rotation = [degToRad(0), degToRad(0), degToRad(0)];
+var rotation = [0, 0, 0];
 var scale = [1, 1, 1];
 var projectionMode = "orthographic";
 var partSelected = "";
@@ -22,9 +22,6 @@ var cameraAngleRadians = degToRad(0);
 var cameraRadius = 20;
 var cameraTarget = [0, 0, 0];
 var cameraPosition = [0, 0, 5];
-var centerPosition = [0, 0, 0];
-var centerObject = [];
-var numObject = 0;
 var listObject = [];
 
 var lightDirection = [0.5, 0.7, -1];
@@ -76,21 +73,21 @@ gl.viewport(0, 0, canvas.width, canvas.height);
 
 const updateAngleX = () => {
   var angleX = document.getElementById("angleX").value;
-  rotation[0] = degToRad(angleX);
+  rotation[0] = angleX;
   document.getElementById("angleX-value").innerHTML = angleX;
   changeObjectSelected();
 };
 
 const updateAngleY = () => {
   var angleY = document.getElementById("angleY").value;
-  rotation[1] = degToRad(angleY);
+  rotation[1] = angleY;
   document.getElementById("angleY-value").innerHTML = angleY;
   changeObjectSelected();
 };
 
 const updateAngleZ = () => {
   var angleZ = document.getElementById("angleZ").value;
-  rotation[2] = degToRad(angleZ);
+  rotation[2] = angleZ;
   document.getElementById("angleZ-value").innerHTML = angleZ;
   changeObjectSelected();
 };
@@ -291,9 +288,8 @@ function loadModel() {
         centerObject : setCenterObject(listPoint),
         translation : [0,0,0],
         scale: [1,1,1],
-        rotation: [degToRad(0), degToRad(0), degToRad(0)]
+        rotation: [0, 0, 0]
       })
-      
       texcoordsSorted.push(textCoordination)
       colorSorted.push(tmpColor);
       vertexSorted.push(position);
@@ -301,7 +297,7 @@ function loadModel() {
   texcoords = texcoordsSorted;
   vertices = vertexSorted;
   colors = colorSorted;
-  setCenterPosition();
+  listObject[0].centerObject = setCenterPosition();
   deleteOptionPart();
   addOptionPart();
   drawScene();
@@ -330,7 +326,7 @@ function setCenterPosition() {
   center[0] /= articulatedModel.points.length;
   center[1] /= articulatedModel.points.length;
   center[2] /= articulatedModel.points.length;
-  centerPosition = center;
+  return center;
 }
 
 
@@ -348,6 +344,7 @@ function onReaderLoad(event) {
 document.getElementById("load").addEventListener("change", onChange);
 
 function drawScene() {
+  var body = listObject[0];
   if (reqAnime) {
     cancelAnimationFrame(reqAnime);
   }
@@ -361,7 +358,6 @@ function drawScene() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   for (let i = 0; i < listObject.length; i++) {
     var objectSelected = listObject[i];
-    var center = (partSelected != listObject[i].part) || i==0 ? centerPosition : objectSelected.centerObject;
     var count = objectSelected.vertice.length / 2;
     render(objectSelected.vertice, objectSelected.color, objectSelected.textcoord);
     var matrix = m4.identity();
@@ -381,19 +377,42 @@ function drawScene() {
       projectionMatrix = m4.oblique(left, right, bottom, topFov, near, far, 45, 45);
     }
 
-    matrix = m4.translate(
-      matrix,
-      objectSelected.translation[0],
-      objectSelected.translation[1],
-      objectSelected.translation[2]
-      );
-    matrix = m4.scale(matrix, objectSelected.scale[0], objectSelected.scale[1], objectSelected.scale[2]);
-
-    matrix = m4.translate(matrix, center[0], center[1], center[2])
-    matrix = m4.xRotate(matrix, objectSelected.rotation[0]);
-    matrix = m4.yRotate(matrix, objectSelected.rotation[1]);
-    matrix = m4.zRotate(matrix, objectSelected.rotation[2]);
-    matrix = m4.translate(matrix, -center[0], -center[1], -center[2])
+    if (i==0) {
+      matrix = m4.translate(
+        matrix,
+        body.translation[0],
+        body.translation[1],
+        body.translation[2]
+        );
+      matrix = m4.scale(matrix, body.scale[0], body.scale[1], body.scale[2]);
+      matrix = m4.translate(matrix, body.centerObject[0], body.centerObject[1], body.centerObject[2])
+      matrix = m4.xRotate(matrix, degToRad(body.rotation[0]));
+      matrix = m4.yRotate(matrix, degToRad(body.rotation[1]));
+      matrix = m4.zRotate(matrix, degToRad(body.rotation[2]));
+      matrix = m4.translate(matrix, -body.centerObject[0], -body.centerObject[1], -body.centerObject[2])
+  
+    }
+    else {
+      matrix = m4.translate(
+        matrix,
+        objectSelected.translation[0] + body.translation[0],
+        objectSelected.translation[1] + body.translation[1],
+        objectSelected.translation[2] + body.translation[2]
+        );
+      matrix = m4.scale(matrix, body.scale[0], body.scale[1], body.scale[2]);
+      matrix = m4.scale(matrix, objectSelected.scale[0], objectSelected.scale[1], objectSelected.scale[2]);
+      
+      matrix = m4.translate(matrix, body.centerObject[0], body.centerObject[1], body.centerObject[2])
+      matrix = m4.xRotate(matrix, degToRad(body.rotation[0]));
+      matrix = m4.yRotate(matrix, degToRad(body.rotation[1]));
+      matrix = m4.zRotate(matrix, degToRad(body.rotation[2]));
+      matrix = m4.translate(matrix, objectSelected.centerObject[0], objectSelected.centerObject[1], objectSelected.centerObject[2])
+      matrix = m4.xRotate(matrix, degToRad(objectSelected.rotation[0]));
+      matrix = m4.yRotate(matrix, degToRad(objectSelected.rotation[1]));
+      matrix = m4.zRotate(matrix, degToRad(objectSelected.rotation[2]));
+      matrix = m4.translate(matrix, -objectSelected.centerObject[0], -objectSelected.centerObject[1], -objectSelected.centerObject[2])
+      matrix = m4.translate(matrix, -body.centerObject[0], -body.centerObject[1], -body.centerObject[2])
+    }
 
     matrix = m4.multiply(viewMatrix, matrix);
     matrix = m4.multiply(projectionMatrix, matrix);
@@ -414,21 +433,21 @@ function drawScene() {
         rotateX = 0;
       }
       rotateX+=1;
-      rotation[0] = degToRad(rotateX);
+      rotation[0] = rotateX;
     }
     else if (rotateAxis == 1) {
       if (rotateY == 360 ) {
         rotateY = 0;
       }
       rotateY+=1;
-      rotation[1] = degToRad(rotateY);
+      rotation[1] = rotateY;
     }
     else {
       if (rotateZ == 360 ) {
         rotateZ = 0;
       }
       rotateZ+=1;
-      rotation[2] = degToRad(rotateZ);
+      rotation[2] = rotateZ;
     }
     reqAnime = requestAnimationFrame(drawScene);
 }
@@ -469,7 +488,7 @@ function resetDefault() {
 
 function saveModel() {
   var newArticulatedModel = JSON.parse(JSON.stringify(articulatedModel));
-  changeModel(newArticulatedModel, rotation[0], rotation[1], rotation[2], centerPosition[0], centerPosition[1], centerPosition[2], scale[0], scale[1], scale[2], translation[0], translation[1], translation[2]);
+  changeModel(newArticulatedModel, degToRad(rotation[0]), degToRad(rotation[1]), degToRad(rotation[2]), centerPosition[0], centerPosition[1], centerPosition[2], scale[0], scale[1], scale[2], translation[0], translation[1], translation[2]);
   let data = JSON.stringify(newArticulatedModel);
   download("model.json", 'text/plain', data);
 }
@@ -530,19 +549,20 @@ function deleteOptionPart() {
 function resetAllObject() {
   listObject.forEach(element => {
     element.translation = [0, 0, 0];
-    element.rotation = [degToRad(0), degToRad(0), degToRad(0)];
+    element.rotation = [0,0,0];
     element.scale = [1, 1, 1];
   });
 }
 
 function updateChangePart() {
   partSelected = document.getElementById("object-part").value;
+  updateUI();
   drawScene();
 }
 
 function changeObjectSelected() {
     listObject.forEach(element => {
-      if (partSelected == listObject[0].part || element.part == partSelected) {
+      if (element.part == partSelected) {
       element.translation[0] = translation[0];
       element.translation[1] = translation[1];
       element.translation[2] = translation[2];
@@ -555,6 +575,40 @@ function changeObjectSelected() {
       }
     });
     drawScene();
+}
+
+function updateUI() {
+  listObject.forEach(element => {
+    if (element.part == partSelected) {
+      document.getElementById("angleX").value = element.rotation[0];
+      document.getElementById("angleY").value = element.rotation[1];
+      document.getElementById("angleZ").value = element.rotation[2];
+      document.getElementById("scaleX").value = element.scale[0];
+      document.getElementById("scaleY").value = element.scale[1];
+      document.getElementById("scaleZ").value = element.scale[2];
+      document.getElementById("translateX").value = element.translation[0];
+      document.getElementById("translateY").value = element.translation[1];
+      document.getElementById("translateZ").value = element.translation[2];
+      document.getElementById("angleX-value").innerHTML = element.rotation[0];
+      document.getElementById("angleY-value").innerHTML = element.rotation[1];
+      document.getElementById("angleZ-value").innerHTML = element.rotation[2];
+      document.getElementById("scaleX-value").innerHTML = element.scale[0];
+      document.getElementById("scaleY-value").innerHTML = element.scale[1];
+      document.getElementById("scaleZ-value").innerHTML = element.scale[2];
+      document.getElementById("translateX-value").innerHTML = element.translation[0];
+      document.getElementById("translateY-value").innerHTML = element.translation[1];
+      document.getElementById("translateZ-value").innerHTML = element.translation[2];
+      translation[0] = element.translation[0];
+      translation[1] = element.translation[1];
+      translation[2] = element.translation[2];
+      rotation[0] = element.rotation[0];
+      rotation[1] = element.rotation[1];
+      rotation[2] = element.rotation[2];
+      scale[0] = element.scale[0];
+      scale[1] = element.scale[1];
+      scale[2] = element.scale[2];
+    }
+  });
 }
 
 loadModel();
