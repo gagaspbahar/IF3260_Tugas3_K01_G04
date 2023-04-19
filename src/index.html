@@ -45,6 +45,20 @@
             <label for="load" id="fileInputLabel">Choose a file</label>
           </div>
         </div>
+        <div class="Texture Mode">
+          <h2>Texture Mode</h2>
+          <button onClick="toggleTexture()">Toggle Texture</button>
+          <label id="texture-label">Off</label>
+          <div>
+            <button id="textureImage">Image</button>
+            <button id="textureEnvirontment">Environment</button>
+            <button id="textureBump">Bump</button>   
+          </div>
+          <div>
+            <button onClick="toggleShading()">Toggle Shading</button>
+            <label id="shading-label">Off</label>
+          </div>
+        </div>
         <div class="input-slider">
           <h2>View Control</h2>
           <table>
@@ -282,14 +296,6 @@
           >
             <option value="undefined" selected>Undefined</option>
           </select>
-        </div>
-        <div>
-          <button onClick="toggleShading()">Toggle Shading</button>
-          <label id="shading-label">Off</label>
-        </div>
-        <div>
-          <button onClick="toggleTexture()">Toggle Texture</button>
-          <label id="texture-label">Off</label>
         </div>
         <div class="animation">
           <button id="rotate-x" onclick="rotateToX()">Rotate X</button>

@@ -11,6 +11,7 @@ var projectionMode = "orthographic";
 var partSelected = "";
 var shadingEnabled = false;
 var useTexture = false;
+var textureOption = 0;
 var textureEnabled = false;
 var animationActive = false;
 var rotateX = 0;
@@ -58,7 +59,7 @@ gl.useProgram(program);
 var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
 var resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
 var texcoordAttributeLocation = gl.getAttribLocation(program, "a_texcoord");
-var textureUniformLocation = gl.getUniformLocation(program, "u_texture");
+var textureImage = gl.getUniformLocation(program, "u_texture");
 var colorUniformLocation = gl.getUniformLocation(program, "u_color");
 var colorAttributeLocation = gl.getAttribLocation(program, "a_color");
 var matrixLocation = gl.getUniformLocation(program, "u_matrix");
@@ -67,9 +68,30 @@ var worldInverseTransposeLocation = gl.getUniformLocation(program, "u_worldInver
 var reverseLightDirectionLocation = gl.getUniformLocation(program, "u_reverseLightDirection");
 var useLightingLocation = gl.getUniformLocation(program, "u_useLighting");
 var useTextureLocation = gl.getUniformLocation(program, "u_useTexture");
+var useTextureOption1 = gl.getUniformLocation(program, "u_textureOption1");
+var useTextureOption = gl.getUniformLocation(program, "u_textureOption");
+
+var projectionLocation = gl.getUniformLocation(program, "u_projection");
+var viewLocation = gl.getUniformLocation(program, "u_view");
+var worldLocation = gl.getUniformLocation(program, "u_world");
+var textureEnvirontment = gl.getUniformLocation(program, "u_env_texture");
+var worldCameraPositionLocation = gl.getUniformLocation(program, "u_worldCameraPosition");
 
 // Set viewport
 gl.viewport(0, 0, canvas.width, canvas.height);
+
+document.getElementById("textureImage").onclick = function () {
+  textureOption = 0;
+  drawScene();
+};
+document.getElementById("textureEnvirontment").onclick = function () {
+  textureOption = 1;
+  drawScene();
+};
+document.getElementById("textureBump").onclick = function () {
+  textureOption = 2;
+  drawScene();
+};
 
 const updateAngleX = () => {
   var angleX = document.getElementById("angleX").value;
@@ -248,8 +270,18 @@ function render(vertice, color, texcoord) {
   gl.enableVertexAttribArray(normalLocation);
 
   gl.uniform1i(useLightingLocation, shadingEnabled);
-  gl.uniform1i(textureUniformLocation, 0);
   gl.uniform1i(useTextureLocation, useTexture);
+  gl.uniform1i(useTextureOption1, textureOption);
+  gl.uniform1i(useTextureOption, textureOption);
+
+  if (textureOption == 0){
+    gl.uniform1i(textureImage, 0);
+    gl.uniform1i(textureEnvirontment, 1);
+  } 
+  else if (textureOption == 1){
+    gl.uniform1i(textureImage, 1);
+    gl.uniform1i(textureEnvirontment, 0);
+  }
 
   const indicesBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesBuffer);
@@ -348,6 +380,7 @@ function drawScene() {
   if (reqAnime) {
     cancelAnimationFrame(reqAnime);
   }
+
   // Clear the canvas
   gl.clearColor(0, 0, 0, 0);
   gl.clear(gl.COLOR_BUFFER_BIT);
@@ -419,12 +452,22 @@ function drawScene() {
 
     var worldMatrix = matrix;
     var worldInverseMatrix = m4.inverse(worldMatrix);
+
+    var modelXRotationRadians = degToRad(0);
+    var modelYRotationRadians = degToRad(0);
+    var worldMatrix2 = m4.xRotation(modelXRotationRadians);
+    worldMatrix2 = m4.yRotate(worldMatrix2, modelYRotationRadians);
     var worldInverseTransposeMatrix = m4.transpose(worldInverseMatrix);
 
 
     gl.uniformMatrix4fv(matrixLocation, false, matrix);
     gl.uniformMatrix4fv(worldInverseTransposeLocation, false, worldInverseTransposeMatrix);
     gl.uniform3fv(reverseLightDirectionLocation, normalize(lightDirection));
+    //Untuk Environment Texture
+    gl.uniformMatrix4fv(projectionLocation, false, projectionMatrix);
+    gl.uniformMatrix4fv(viewLocation, false, viewMatrix);
+    gl.uniformMatrix4fv(worldLocation, false, worldMatrix2); //Ragu
+    gl.uniform3fv(worldCameraPositionLocation, cameraPosition);
     gl.drawElements(this.gl.TRIANGLES, count, gl.UNSIGNED_SHORT, 0);
   }
   if (animationActive) {
@@ -525,7 +568,75 @@ function loadTexture(url) {
   return texture;
 }
 
-window.onload = loadTexture("./noodles.jpg");
+function loadEnvironmentTexture(){
+  var texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+
+  const faceInfos = [
+    {
+      target: gl.TEXTURE_CUBE_MAP_POSITIVE_X,
+      url: "./assets/pos-x.jpg",
+    },
+    {
+      target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
+      url: "./assets/neg-x.jpg",
+    },
+    {
+      target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
+      url: "./assets/pos-y.jpg",
+    },
+    {
+      target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
+      url: "./assets/neg-y.jpg",
+    },
+    {
+      target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
+      url: "./assets/pos-z.jpg",
+    },
+    {
+      target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
+      url: "./assets/neg-z.jpg",
+    },
+  ];
+
+  faceInfos.forEach((faceInfo) => {
+    const { target, url } = faceInfo;
+
+    // Upload the canvas to the cubemap face.
+    const level = 0;
+    const internalFormat = gl.RGBA;
+    const width = 512;
+    const height = 512;
+    const format = gl.RGBA;
+    const type = gl.UNSIGNED_BYTE;
+
+    // setup each face so it's immediately renderable
+    gl.texImage2D(target, level, internalFormat, width, height, 0, format, type, null);
+
+    // Asynchronously load an image
+    const image = new Image();
+    image.crossOrigin = "anonymous";
+    image.onload = () => {
+      // Now that the image has loaded make copy it to the texture.
+      gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+      gl.texImage2D(target, level, internalFormat, format, type, image);
+      gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
+    };
+    image.src = url;
+  });
+  gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
+  gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+}
+
+// if (textureOption == 0){
+//   window.onload = loadTexture("./assets/noodles.jpg");
+// } else if (textureOption == 1){
+//   window.onload = loadEnvironmentTexture();
+// }
+window.onload = loadEnvironmentTexture();
+window.onload = loadTexture("./assets/noodles.jpg");
+
+
 function addOptionPart() {
   for (var i = 0; i < articulatedModel.edge.length; i++) {
     var option = document.createElement("option");
