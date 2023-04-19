@@ -9,7 +9,8 @@ var rotation = [degToRad(0), degToRad(0), degToRad(0)];
 var scale = [1, 1, 1];
 var projectionMode = "orthographic";
 var shadingEnabled = false;
-var useTexture = true;
+var useTexture = false;
+var textureEnabled = false;
 var animationActive = false;
 var rotateX = 0;
 var rotateY = 0;
@@ -172,6 +173,13 @@ const toggleShading = () => {
   drawScene();
 };
 
+const toggleTexture = () => {
+  useTexture = !useTexture;
+  var text = useTexture ? "On" : "Off";
+  document.getElementById("texture-label").innerHTML = text;
+  drawScene();
+};
+
 const toggleAnimation = () => {
   animationActive = !animationActive;
   var text = animationActive ? "On" : "Off";
@@ -230,7 +238,7 @@ function render(vertice, color, texcoord) {
   gl.enableVertexAttribArray(texcoordAttributeLocation);
   
   // test texture
- loadTexture("./noodles.jpg")
+ //loadTexture("./noodles.jpg")
   
   var normalBuffer = gl.createBuffer();
   var normal = getVectorNormals(vertice);
@@ -465,8 +473,11 @@ function loadTexture(url) {
   };
   requestCORSIfNotSameOrigin(image, url);
   image.src = url;
+
   return texture;
 }
+
+window.onload = loadTexture("./noodles.jpg");
 
 
 loadModel();

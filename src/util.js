@@ -1,3 +1,48 @@
+texcoordtemp = [
+    // select the top left image
+    0   , 0  ,
+    0   , 0.5,
+    0.25, 0  ,
+    0   , 0.5,
+    0.25, 0.5,
+    0.25, 0  ,
+    // select the top middle image
+    0.25, 0  ,
+    0.5 , 0  ,
+    0.25, 0.5,
+    0.25, 0.5,
+    0.5 , 0  ,
+    0.5 , 0.5,
+    // select to top right image
+    0.5 , 0  ,
+    0.5 , 0.5,
+    0.75, 0  ,
+    0.5 , 0.5,
+    0.75, 0.5,
+    0.75, 0  ,
+    // select the bottom left image
+    0   , 0.5,
+    0.25, 0.5,
+    0   , 1  ,
+    0   , 1  ,
+    0.25, 0.5,
+    0.25, 1  ,
+    // select the bottom middle image
+    0.25, 0.5,
+    0.25, 1  ,
+    0.5 , 0.5,
+    0.25, 1  ,
+    0.5 , 1  ,
+    0.5 , 0.5,
+    // select the bottom right image
+    0.5 , 0.5,
+    0.75, 0.5,
+    0.5 , 1  ,
+    0.5 , 1  ,
+    0.75, 0.5,
+    0.75, 1  ,
+    ]
+
 const defaultModel = {
     "points":[
         [-1.2, 0, 1.5],
@@ -163,7 +208,7 @@ const defaultModel = {
                 [1.0,0.0,0.0,1.0],
                 [1.0,0.0,0.0,1.0],
                 [1.0,0.0,0.0,1.0]
-            ],
+            ], "textcoord": texcoordtemp,
         },
         {
             "parts": "right leg",
@@ -182,7 +227,7 @@ const defaultModel = {
                 [0.0,1.0,0.0,1.0],
                 [0.0,1.0,0.0,1.0],
                 [0.0,1.0,0.0,1.0]
-            ],
+            ], "textcoord": texcoordtemp,
         },
         {
             "parts": "left leg",
@@ -193,7 +238,7 @@ const defaultModel = {
                 [84, 85, 86, 87],
                 [88, 89, 90, 91],
                 [92, 93, 94, 95]
-            ],
+            ], 
             "color":[
                 [0.0,0.0,1.0,1.0],
                 [0.0,0.0,1.0,1.0],
@@ -201,7 +246,7 @@ const defaultModel = {
                 [0.0,0.0,1.0,1.0],
                 [0.0,0.0,1.0,1.0],
                 [0.0,0.0,1.0,1.0]
-            ],
+            ],"textcoord": texcoordtemp,
         },
         {
             "parts": "right arm",
@@ -220,7 +265,7 @@ const defaultModel = {
                 [1.0,1.0,1.0,1.0],
                 [1.0,1.0,1.0,1.0],
                 [1.0,1.0,1.0,1.0]
-            ],
+            ],"textcoord": texcoordtemp,
         },
         {
             "parts": "left arm",
@@ -239,7 +284,7 @@ const defaultModel = {
                 [1.0,1.0,0.0,1.0],
                 [1.0,1.0,0.0,1.0],
                 [1.0,1.0,0.0,1.0]
-            ],
+            ],"textcoord": texcoordtemp,
         },
         {
             "parts": "head",
@@ -258,7 +303,7 @@ const defaultModel = {
                 [1.0,0.0,1.0,1.0],
                 [1.0,0.0,1.0,1.0],
                 [1.0,0.0,1.0,1.0]
-            ],
+            ],"textcoord": texcoordtemp,
         },
     ]};
 
