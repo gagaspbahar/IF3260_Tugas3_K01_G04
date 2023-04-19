@@ -14,10 +14,6 @@ var useTexture = false;
 var textureOption = 0;
 var textureEnabled = false;
 var animationActive = false;
-var rotateX = 0;
-var rotateY = 0;
-var rotateZ = 0;
-var rotateAxis = 0;
 var reqAnime = null;
 var cameraAngleRadians = degToRad(0);
 var cameraRadius = 20;
@@ -210,18 +206,6 @@ const toggleAnimation = () => {
   drawScene();
 };
 
-const rotateToX = () => {
-  rotateAxis = 0;
-};
-
-const rotateToY = () => {
-  rotateAxis = 1;
-};
-
-const rotateToZ = () => {
-  rotateAxis = 2;
-};
-
 function isPowerOf2(value) {
   return (value & (value - 1)) === 0;
 }
@@ -320,7 +304,8 @@ function loadModel() {
         centerObject : setCenterObject(listPoint),
         translation : [0,0,0],
         scale: [1,1,1],
-        rotation: [0, 0, 0]
+        rotation: [0, 0, 0],
+        animation: point.animation,
       })
       texcoordsSorted.push(textCoordination)
       colorSorted.push(tmpColor);
@@ -470,34 +455,37 @@ function drawScene() {
     gl.uniform3fv(worldCameraPositionLocation, cameraPosition);
     gl.drawElements(this.gl.TRIANGLES, count, gl.UNSIGNED_SHORT, 0);
   }
+  
   if (animationActive) {
-    if (rotateAxis == 0) {
-      if (rotateX == 360 ) {
-        rotateX = 0;
+    listObject.forEach(element => {
+      if (element.animation.minAX != element.animation.maxAX) {
+        element.rotation[0] += element.animation.incStart;
+        if (element.rotation[0] >= element.animation.maxAX || element.rotation[0] <= element.animation.minAX) {
+          element.animation.incStart = -element.animation.incStart;
+        }
       }
-      rotateX+=1;
-      rotation[0] = rotateX;
-    }
-    else if (rotateAxis == 1) {
-      if (rotateY == 360 ) {
-        rotateY = 0;
+      if (element.animation.minAY != element.animation.maxAY) {
+        element.rotation[1] += element.animation.incStart;
+        if (element.rotation[1] >= element.animation.maxAY || element.rotation[1] <= element.animation.minAY) {
+          element.animation.incStart = -element.animation.incStart;
+        }
       }
-      rotateY+=1;
-      rotation[1] = rotateY;
-    }
-    else {
-      if (rotateZ == 360 ) {
-        rotateZ = 0;
+      if (element.animation.minAZ != element.animation.maxAZ) {
+        element.rotation[2] += element.animation.incStart;
+        if (element.rotation[2] >= element.animation.maxAZ || element.rotation[2] <= element.animation.minAZ) {
+          element.animation.incStart = -element.animation.incStart;
+        }
       }
-      rotateZ+=1;
-      rotation[2] = rotateZ;
-    }
+    });
     reqAnime = requestAnimationFrame(drawScene);
-}
+  }
 }
 
 function resetDefault() {
   resetAllObject();
+  translation = [0,0,0];
+  rotation = [0,0,0]
+  scale = [1,1,1];
   cameraPosition = [0, 0, 5];
   document.getElementById("angleX").value = 0;
   document.getElementById("angleY").value = 0;
@@ -525,7 +513,6 @@ function resetDefault() {
   document.getElementById("cameraY-value").innerHTML = 0;
   document.getElementById("cameraZ-value").innerHTML = 5;
   document.getElementById("cameraRadius-value").innerHTML = 20;
-
   drawScene();
 }
 

@@ -43,7 +43,7 @@ texcoordtemp = [
     0.75, 1  ,
     ]
 
-const defaultModel = {
+const defaultModel ={
     "points":[
         [-1.2, 0, 1.5],
         [-1.2, 5, 1.5],
@@ -208,7 +208,17 @@ const defaultModel = {
                 [1.0,0.0,0.0,1.0],
                 [1.0,0.0,0.0,1.0],
                 [1.0,0.0,0.0,1.0]
-            ], "textcoord": texcoordtemp,
+            ],
+            "textcoord": texcoordtemp,
+            "animation":{
+                "minAX": 0,
+                "maxAX": 0,
+                "minAY": 0,
+                "maxAY": 0,
+                "minAZ": 0,
+                "maxAZ": 0,
+                "incStart": 0
+            }
         },
         {
             "part": "right leg",
@@ -227,7 +237,17 @@ const defaultModel = {
                 [0.0,1.0,0.0,1.0],
                 [0.0,1.0,0.0,1.0],
                 [0.0,1.0,0.0,1.0]
-            ], "textcoord": texcoordtemp,
+            ],
+            "textcoord": texcoordtemp,
+            "animation":{
+                "minAX": 0,
+                "maxAX": 0,
+                "minAY": 0,
+                "maxAY": 0,
+                "minAZ": -15,
+                "maxAZ": 15,
+                "incStart": 0.5
+            }
         },
         {
             "part": "left leg",
@@ -238,7 +258,7 @@ const defaultModel = {
                 [84, 85, 86, 87],
                 [88, 89, 90, 91],
                 [92, 93, 94, 95]
-            ], 
+            ],
             "color":[
                 [0.0,0.0,1.0,1.0],
                 [0.0,0.0,1.0,1.0],
@@ -246,7 +266,17 @@ const defaultModel = {
                 [0.0,0.0,1.0,1.0],
                 [0.0,0.0,1.0,1.0],
                 [0.0,0.0,1.0,1.0]
-            ],"textcoord": texcoordtemp,
+            ],
+            "textcoord": texcoordtemp,
+            "animation":{
+                "minAX": 0,
+                "maxAX": 0,
+                "minAY": 0,
+                "maxAY": 0,
+                "minAZ": -15,
+                "maxAZ": 15,
+                "incStart": -0.5
+            }
         },
         {
             "part": "right arm",
@@ -265,7 +295,17 @@ const defaultModel = {
                 [1.0,1.0,1.0,1.0],
                 [1.0,1.0,1.0,1.0],
                 [1.0,1.0,1.0,1.0]
-            ],"textcoord": texcoordtemp,
+            ],
+            "textcoord": texcoordtemp,
+            "animation":{
+                "minAX": 0,
+                "maxAX": 0,
+                "minAY": 0,
+                "maxAY": 0,
+                "minAZ": -15,
+                "maxAZ": 15,
+                "incStart": 0.5
+            }
         },
         {
             "part": "left arm",
@@ -284,7 +324,17 @@ const defaultModel = {
                 [1.0,1.0,0.0,1.0],
                 [1.0,1.0,0.0,1.0],
                 [1.0,1.0,0.0,1.0]
-            ],"textcoord": texcoordtemp,
+            ],
+            "textcoord": texcoordtemp,
+            "animation":{
+                "minAX": 0,
+                "maxAX": 0,
+                "minAY": 0,
+                "maxAY": 0,
+                "minAZ": -15,
+                "maxAZ": 15,
+                "incStart": -0.5
+            }
         },
         {
             "part": "head",
@@ -303,9 +353,20 @@ const defaultModel = {
                 [1.0,0.0,1.0,1.0],
                 [1.0,0.0,1.0,1.0],
                 [1.0,0.0,1.0,1.0]
-            ],"textcoord": texcoordtemp,
-        },
-    ]};
+            ],
+            "textcoord": texcoordtemp,
+            "animation":{
+                "minAX": 0,
+                "maxAX": 0,
+                "minAY": -45,
+                "maxAY": 45,
+                "minAZ": 0,
+                "maxAZ": 0,
+                "incStart": 0.5
+            }
+        }
+    ]
+}
 
 
 function radToDeg(r) {
