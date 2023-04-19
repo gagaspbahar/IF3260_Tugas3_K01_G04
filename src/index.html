@@ -12,7 +12,7 @@
       <canvas id="gl-canvas" width="800" height="750">
         Your browser does not support WebGL.
       </canvas>
-    </div>
+    </div> 
     <div class="all-container">
       <div class="menu-container">
         <h1>3D Articulated Model</h1>
@@ -271,6 +271,16 @@
             <option value="orthographic" selected>Orthographic</option>
             <option value="perspective">Perspective</option>
             <option value="oblique">Oblique</option>
+          </select>
+        </div>
+        <div>
+          <label>Object Part</label>
+          <select
+            name="object-part"
+            id="object-part"
+            onchange="updateChangePart()"
+          >
+            <option value="undefined" selected>Undefined</option>
           </select>
         </div>
         <div>

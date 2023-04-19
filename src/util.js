@@ -192,7 +192,7 @@ const defaultModel = {
     ],
     "edge":[
         {
-            "parts": "body",
+            "part": "body",
             "topology": [
                 [0, 1, 3, 2],
                 [48, 49, 7, 6],
@@ -211,7 +211,7 @@ const defaultModel = {
             ], "textcoord": texcoordtemp,
         },
         {
-            "parts": "right leg",
+            "part": "right leg",
             "topology": [
                 [8, 9, 11, 10],
                 [64, 65, 15, 14],
@@ -230,7 +230,7 @@ const defaultModel = {
             ], "textcoord": texcoordtemp,
         },
         {
-            "parts": "left leg",
+            "part": "left leg",
             "topology": [
                 [16, 17, 19, 18],
                 [80, 81, 23, 22],
@@ -249,7 +249,7 @@ const defaultModel = {
             ],"textcoord": texcoordtemp,
         },
         {
-            "parts": "right arm",
+            "part": "right arm",
             "topology": [
                 [24, 25, 27, 26],
                 [96, 97, 31, 30],
@@ -268,7 +268,7 @@ const defaultModel = {
             ],"textcoord": texcoordtemp,
         },
         {
-            "parts": "left arm",
+            "part": "left arm",
             "topology": [
                 [32, 33, 35, 34],
                 [112, 113, 39, 38],
@@ -287,7 +287,7 @@ const defaultModel = {
             ],"textcoord": texcoordtemp,
         },
         {
-            "parts": "head",
+            "part": "head",
             "topology": [
                 [40, 41, 43, 42],
                 [128, 129, 47, 46],

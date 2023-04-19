@@ -8,6 +8,7 @@ var translation = [0, 0, 0];
 var rotation = [degToRad(0), degToRad(0), degToRad(0)];
 var scale = [1, 1, 1];
 var projectionMode = "orthographic";
+var partSelected = "";
 var shadingEnabled = false;
 var useTexture = false;
 var textureEnabled = false;
@@ -22,6 +23,9 @@ var cameraRadius = 20;
 var cameraTarget = [0, 0, 0];
 var cameraPosition = [0, 0, 5];
 var centerPosition = [0, 0, 0];
+var centerObject = [];
+var numObject = 0;
+var listObject = [];
 
 var lightDirection = [0.5, 0.7, -1];
 
@@ -74,63 +78,63 @@ const updateAngleX = () => {
   var angleX = document.getElementById("angleX").value;
   rotation[0] = degToRad(angleX);
   document.getElementById("angleX-value").innerHTML = angleX;
-  drawScene();
+  changeObjectSelected();
 };
 
 const updateAngleY = () => {
   var angleY = document.getElementById("angleY").value;
   rotation[1] = degToRad(angleY);
   document.getElementById("angleY-value").innerHTML = angleY;
-  drawScene();
+  changeObjectSelected();
 };
 
 const updateAngleZ = () => {
   var angleZ = document.getElementById("angleZ").value;
   rotation[2] = degToRad(angleZ);
   document.getElementById("angleZ-value").innerHTML = angleZ;
-  drawScene();
+  changeObjectSelected();
 };
 
 const updateScaleX = () => {
   var scaleX = document.getElementById("scaleX").value;
   scale[0] = scaleX;
   document.getElementById("scaleX-value").innerHTML = scaleX;
-  drawScene();
+  changeObjectSelected();
 };
 
 const updateScaleY = () => {
   var scaleY = document.getElementById("scaleY").value;
   scale[1] = scaleY;
   document.getElementById("scaleY-value").innerHTML = scaleY;
-  drawScene();
+  changeObjectSelected();
 };
 
 const updateScaleZ = () => {
   var scaleZ = document.getElementById("scaleZ").value;
   scale[2] = scaleZ;
   document.getElementById("scaleZ-value").innerHTML = scaleZ;
-  drawScene();
+  changeObjectSelected();
 };
 
 const updateTranslateX = () => {
   var translateX = parseFloat(document.getElementById("translateX").value);
   translation[0] = translateX;
   document.getElementById("translateX-value").innerHTML = translateX;
-  drawScene();
+  changeObjectSelected();
 };
 
 const updateTranslateY = () => {
   var translateY = parseFloat(document.getElementById("translateY").value);
   translation[1] = translateY;
   document.getElementById("translateY-value").innerHTML = translateY;
-  drawScene();
+  changeObjectSelected();
 };
 
 const updateTranslateZ = () => {
   var translateZ = parseFloat(document.getElementById("translateZ").value);
   translation[2] = translateZ;
   document.getElementById("translateZ-value").innerHTML = translateZ;
-  drawScene();
+  changeObjectSelected();
 };
 
 const updateCameraX = () => {
@@ -216,7 +220,6 @@ function render(vertice, color, texcoord) {
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertice), gl.STATIC_DRAW);
   gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(positionAttributeLocation);
-
   var faceColors = [];
   for (var j = 0; j < color.length; ++j) {
     const c = color[j];
@@ -238,7 +241,7 @@ function render(vertice, color, texcoord) {
   gl.enableVertexAttribArray(texcoordAttributeLocation);
   
   // test texture
- //loadTexture("./noodles.jpg")
+//  loadTexture("./noodles.jpg")
   
   var normalBuffer = gl.createBuffer();
   var normal = getVectorNormals(vertice);
@@ -265,27 +268,56 @@ function loadModel() {
   let vertexSorted = [];
   let colorSorted = [];
   let texcoordsSorted = [];
-  for (let i = 0; i < articulatedModel.edge.length; i++) {
-    let point = articulatedModel.edge[i];
-    let textCoordination = articulatedModel.edge[i].textcoord;
-    let tmpColor = [];
-    let position = [];
-    for (let j = 0; j < point.topology.length; j++) {
-      position = position.concat(vertice[point.topology[j][0]]);
-      position = position.concat(vertice[point.topology[j][1]]);
-      position = position.concat(vertice[point.topology[j][2]]);
-      position = position.concat(vertice[point.topology[j][3]]);
-      tmpColor.push(point.color[j]);
+  let centerObjectSorted = [];
+  centerObjectSorted.push(setCenterPosition())
+    for (let i = 0; i < articulatedModel.edge.length; i++) {
+      let point = articulatedModel.edge[i];
+      let textCoordination = articulatedModel.edge[i].textcoord;
+      let listPoint = []
+      let tmpColor = [];
+      let position = [];
+      for (let j = 0; j < point.topology.length; j++) {
+        for (let k = 0; k < 4; k++) {
+          position = position.concat(vertice[point.topology[j][k]]);
+          listPoint.push(vertice[point.topology[j][k]])
+        }
+        tmpColor.push(point.color[j]);
+      }
+      listObject.push({
+        part : point.part,
+        vertice : position,
+        color : tmpColor,
+        textcoord : textCoordination,
+        centerObject : setCenterObject(listPoint),
+        translation : [0,0,0],
+        scale: [1,1,1],
+        rotation: [degToRad(0), degToRad(0), degToRad(0)]
+      })
+      
+      texcoordsSorted.push(textCoordination)
+      colorSorted.push(tmpColor);
+      vertexSorted.push(position);
     }
-    texcoordsSorted.push(textCoordination)
-    colorSorted.push(tmpColor);
-    vertexSorted.push(position);
-  }
   texcoords = texcoordsSorted;
   vertices = vertexSorted;
   colors = colorSorted;
-  setCenterPosition()
+  setCenterPosition();
+  deleteOptionPart();
+  addOptionPart();
   drawScene();
+}
+
+function setCenterObject(position) {
+  let center = [0, 0, 0];
+  for (let i = 0; i < position.length; i++) {
+    center[0] += position[i][0];
+    center[1] += position[i][1];
+    center[2] += position[i][2];
+  }
+  center[0] /= position.length;
+  center[1] /= position.length;
+  center[2] /= position.length;
+  return center;
 }
 
 function setCenterPosition() {
@@ -327,13 +359,12 @@ function drawScene() {
   gl.enable(gl.CULL_FACE);
   gl.enable(gl.DEPTH_TEST);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-
-  for (let i = 0; i < vertices.length; i++) {
-    var count = vertices[i].length / 2;
-    render(vertices[i], colors[i], texcoords[i]);
+  for (let i = 0; i < listObject.length; i++) {
+    var objectSelected = listObject[i];
+    var center = (partSelected != listObject[i].part) || i==0 ? centerPosition : objectSelected.centerObject;
+    var count = objectSelected.vertice.length / 2;
+    render(objectSelected.vertice, objectSelected.color, objectSelected.textcoord);
     var matrix = m4.identity();
-
 
     var cameraMatrix = m4.identity();
     var zoom = cameraRadius / 20;
@@ -352,17 +383,17 @@ function drawScene() {
 
     matrix = m4.translate(
       matrix,
-      translation[0],
-      translation[1],
-      translation[2]
+      objectSelected.translation[0],
+      objectSelected.translation[1],
+      objectSelected.translation[2]
       );
-    matrix = m4.scale(matrix, scale[0], scale[1], scale[2]);
+    matrix = m4.scale(matrix, objectSelected.scale[0], objectSelected.scale[1], objectSelected.scale[2]);
 
-    matrix = m4.translate(matrix, centerPosition[0], centerPosition[1], centerPosition[2])
-    matrix = m4.xRotate(matrix, rotation[0]);
-    matrix = m4.yRotate(matrix, rotation[1]);
-    matrix = m4.zRotate(matrix, rotation[2]);
-    matrix = m4.translate(matrix, -centerPosition[0], -centerPosition[1], -centerPosition[2])
+    matrix = m4.translate(matrix, center[0], center[1], center[2])
+    matrix = m4.xRotate(matrix, objectSelected.rotation[0]);
+    matrix = m4.yRotate(matrix, objectSelected.rotation[1]);
+    matrix = m4.zRotate(matrix, objectSelected.rotation[2]);
+    matrix = m4.translate(matrix, -center[0], -center[1], -center[2])
 
     matrix = m4.multiply(viewMatrix, matrix);
     matrix = m4.multiply(projectionMatrix, matrix);
@@ -404,9 +435,7 @@ function drawScene() {
 }
 
 function resetDefault() {
-  rotation = [0, 0, 0];
-  scale = [1, 1, 1];
-  translation = [0, 0, 0];
+  resetAllObject();
   cameraPosition = [0, 0, 5];
   document.getElementById("angleX").value = 0;
   document.getElementById("angleY").value = 0;
@@ -478,7 +507,55 @@ function loadTexture(url) {
 }
 
 window.onload = loadTexture("./noodles.jpg");
+function addOptionPart() {
+  for (var i = 0; i < articulatedModel.edge.length; i++) {
+    var option = document.createElement("option");
+    option.text = articulatedModel.edge[i].part;
+    option.value = articulatedModel.edge[i].part;
+    if (i == 0) {
+      partSelected = articulatedModel.edge[i].part;
+      option.selected = true;
+    }
+    document.getElementById("object-part").appendChild(option);
+  }
+}
 
+function deleteOptionPart() {
+  var optionPart = document.getElementById("object-part");
+  while (optionPart.hasChildNodes()) {
+    optionPart.removeChild(optionPart.firstChild);
+  }
+}
+
+function resetAllObject() {
+  listObject.forEach(element => {
+    element.translation = [0, 0, 0];
+    element.rotation = [degToRad(0), degToRad(0), degToRad(0)];
+    element.scale = [1, 1, 1];
+  });
+}
+
+function updateChangePart() {
+  partSelected = document.getElementById("object-part").value;
+  drawScene();
+}
+
+function changeObjectSelected() {
+    listObject.forEach(element => {
+      if (partSelected == listObject[0].part || element.part == partSelected) {
+      element.translation[0] = translation[0];
+      element.translation[1] = translation[1];
+      element.translation[2] = translation[2];
+      element.rotation[0] = rotation[0];
+      element.rotation[1] = rotation[1];
+      element.rotation[2] = rotation[2];
+      element.scale[0] = scale[0];
+      element.scale[1] = scale[1];
+      element.scale[2] = scale[2];
+      }
+    });
+    drawScene();
+}
 
 loadModel();
 
