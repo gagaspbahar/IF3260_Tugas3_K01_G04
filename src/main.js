@@ -243,9 +243,6 @@ function render(vertice, color, texcoord) {
   gl.vertexAttribPointer(texcoordAttributeLocation, 2, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(texcoordAttributeLocation);
   
-  // test texture
-//  loadTexture("./noodles.jpg")
-  
   var normalBuffer = gl.createBuffer();
   var normal = getVectorNormals(vertice);
   gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
@@ -317,6 +314,7 @@ function loadModel() {
   listObject[0].centerObject = setCenterPosition();
   deleteOptionPart();
   addOptionPart();
+  resetDefault();
   drawScene();
 }
 
@@ -355,6 +353,7 @@ function onChange(event) {
 
 function onReaderLoad(event) {
   articulatedModel = JSON.parse(event.target.result);
+  listObject = [];
   loadModel();
 }
 
@@ -518,7 +517,7 @@ function resetDefault() {
 
 function saveModel() {
   var newArticulatedModel = JSON.parse(JSON.stringify(articulatedModel));
-  changeModel(newArticulatedModel, degToRad(rotation[0]), degToRad(rotation[1]), degToRad(rotation[2]), centerPosition[0], centerPosition[1], centerPosition[2], scale[0], scale[1], scale[2], translation[0], translation[1], translation[2]);
+  changeModel(newArticulatedModel, listObject);
   let data = JSON.stringify(newArticulatedModel);
   download("model.json", 'text/plain', data);
 }
@@ -526,7 +525,7 @@ function saveModel() {
 function download(fileName, contentType, content) {
   var a = document.createElement("a");
   var file = new Blob([content], {type: contentType});
-  a.href = URL.createModelURL(file);
+  a.href = URL.createObjectURL(file);
   a.download = fileName;
   a.click();
 }

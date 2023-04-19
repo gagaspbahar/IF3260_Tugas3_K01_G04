@@ -447,27 +447,74 @@ function matrixMultiplication(matrixA, matrixB) {
     return result;
 }
 
-function changeModel(model, rotateX, rotateY, rotateZ, centerPositionX, centerPositionY, centerPositionZ, scaleX, scaleY, scaleZ, translateX, translateY, translateZ) {
-    let matrixResult = [], mTmp = [];
-    var matrix = m4.identity();
-    matrix = m4.translate(matrix, translateX, translateY, translateZ);
-    matrix = m4.scale(matrix, scaleX, scaleY, scaleZ);
-    matrix = m4.translate(matrix, centerPositionX, centerPositionY, centerPositionZ);
-    matrix = m4.xyzRotate(matrix, rotateX, rotateY, rotateZ);
-    matrix = m4.translate(matrix, -centerPositionX, -centerPositionY, -centerPositionZ);
-    for (let i = 0; i < matrix.length; i++) {
-        mTmp.push(matrix[i]);
-        if (mTmp.length == 4) {
-            matrixResult.push(mTmp);
-            mTmp = [];
+function changeModel(model, listObject) {
+    let body = listObject[0];
+    let listTopology = [];
+    for (let i=0; i<listObject.length;i++) {
+        let objectSelected = listObject[i];
+        let matrixResult = [], mTmp = [];
+        var matrix = m4.identity();
+        if (i==0) {
+            matrix = m4.translate(
+              matrix,
+              body.translation[0],
+              body.translation[1],
+              body.translation[2]
+              );
+            matrix = m4.scale(matrix, body.scale[0], body.scale[1], body.scale[2]);
+            matrix = m4.translate(matrix, body.centerObject[0], body.centerObject[1], body.centerObject[2])
+            matrix = m4.xRotate(matrix, degToRad(body.rotation[0]));
+            matrix = m4.yRotate(matrix, degToRad(body.rotation[1]));
+            matrix = m4.zRotate(matrix, degToRad(body.rotation[2]));
+            matrix = m4.translate(matrix, -body.centerObject[0], -body.centerObject[1], -body.centerObject[2])
+        
+          }
+        else {
+            matrix = m4.translate(
+              matrix,
+              objectSelected.translation[0] + body.translation[0],
+              objectSelected.translation[1] + body.translation[1],
+              objectSelected.translation[2] + body.translation[2]
+              );
+            matrix = m4.scale(matrix, body.scale[0], body.scale[1], body.scale[2]);
+            matrix = m4.scale(matrix, objectSelected.scale[0], objectSelected.scale[1], objectSelected.scale[2]);
+            
+            matrix = m4.translate(matrix, body.centerObject[0], body.centerObject[1], body.centerObject[2])
+            matrix = m4.xRotate(matrix, degToRad(body.rotation[0]));
+            matrix = m4.yRotate(matrix, degToRad(body.rotation[1]));
+            matrix = m4.zRotate(matrix, degToRad(body.rotation[2]));
+            matrix = m4.translate(matrix, objectSelected.centerObject[0], objectSelected.centerObject[1], objectSelected.centerObject[2])
+            matrix = m4.xRotate(matrix, degToRad(objectSelected.rotation[0]));
+            matrix = m4.yRotate(matrix, degToRad(objectSelected.rotation[1]));
+            matrix = m4.zRotate(matrix, degToRad(objectSelected.rotation[2]));
+            matrix = m4.translate(matrix, -objectSelected.centerObject[0], -objectSelected.centerObject[1], -objectSelected.centerObject[2])
+            matrix = m4.translate(matrix, -body.centerObject[0], -body.centerObject[1], -body.centerObject[2])
+          }
+        for (let i = 0; i < matrix.length; i++) {
+            mTmp.push(matrix[i]);
+            if (mTmp.length == 4) {
+                matrixResult.push(mTmp);
+                mTmp = [];
+            }
+        }
+        listTopology = getListTopology(model.edge[i].topology);
+        for (let i = 0; i < listTopology.length; i++) {
+            let point = model.points[listTopology[i]];
+            let matrixModel = [[point[0], point[1], point[2], 1]];
+            let result = matrixMultiplication(matrixModel, matrixResult);
+            model.points[listTopology[i]] = [result[0][0], result[0][1], result[0][2]];
         }
     }
-    for (let i = 0; i < model.points.length; i++) {
-        let point = model.points[i];
-        let matrixModel = [[point[0], point[1], point[2], 1]];
-        let result = matrixMultiplication(matrixModel, matrixResult);
-        model.points[i] = [result[0][0], result[0][1], result[0][2]];
+}
+
+function getListTopology(topology) {
+    let list = []
+    for (let i = 0; i < topology.length; i++) {
+        for (let j = 0; j < topology[i].length; j++) {
+            list.push(topology[i][j]);
+        }
     }
+    return list;
 }
 
 function requestCORSIfNotSameOrigin(img, url) {
