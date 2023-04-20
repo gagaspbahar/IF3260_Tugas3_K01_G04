@@ -486,48 +486,16 @@ function matrixMultiplication(matrixA, matrixB) {
 }
 
 function changeModel(model, listObject) {
-    let body = listObject[0];
+    // let body = listObject[0];
     let listTopology = [];
     for (let i=0; i<listObject.length;i++) {
         let objectSelected = listObject[i];
         let matrixResult = [], mTmp = [];
-        var matrix = m4.identity();
-        if (i==0) {
-            matrix = m4.translate(
-              matrix,
-              body.translation[0],
-              body.translation[1],
-              body.translation[2]
-              );
-            matrix = m4.scale(matrix, body.scale[0], body.scale[1], body.scale[2]);
-            matrix = m4.translate(matrix, body.centerObject[0], body.centerObject[1], body.centerObject[2])
-            matrix = m4.xRotate(matrix, degToRad(body.rotation[0]));
-            matrix = m4.yRotate(matrix, degToRad(body.rotation[1]));
-            matrix = m4.zRotate(matrix, degToRad(body.rotation[2]));
-            matrix = m4.translate(matrix, -body.centerObject[0], -body.centerObject[1], -body.centerObject[2])
-        
-          }
-        else {
-            matrix = m4.translate(
-              matrix,
-              objectSelected.translation[0] + body.translation[0],
-              objectSelected.translation[1] + body.translation[1],
-              objectSelected.translation[2] + body.translation[2]
-              );
-            matrix = m4.scale(matrix, body.scale[0], body.scale[1], body.scale[2]);
-            matrix = m4.scale(matrix, objectSelected.scale[0], objectSelected.scale[1], objectSelected.scale[2]);
-            
-            matrix = m4.translate(matrix, body.centerObject[0], body.centerObject[1], body.centerObject[2])
-            matrix = m4.xRotate(matrix, degToRad(body.rotation[0]));
-            matrix = m4.yRotate(matrix, degToRad(body.rotation[1]));
-            matrix = m4.zRotate(matrix, degToRad(body.rotation[2]));
-            matrix = m4.translate(matrix, objectSelected.centerObject[0], objectSelected.centerObject[1], objectSelected.centerObject[2])
-            matrix = m4.xRotate(matrix, degToRad(objectSelected.rotation[0]));
-            matrix = m4.yRotate(matrix, degToRad(objectSelected.rotation[1]));
-            matrix = m4.zRotate(matrix, degToRad(objectSelected.rotation[2]));
-            matrix = m4.translate(matrix, -objectSelected.centerObject[0], -objectSelected.centerObject[1], -objectSelected.centerObject[2])
-            matrix = m4.translate(matrix, -body.centerObject[0], -body.centerObject[1], -body.centerObject[2])
-          }
+        var matrix = [];
+        var ans = {value: null}
+        recursiveTransformation(parentChildLookup, objectSelected.part, m4.identity(), ans)
+        matrix = ans.value;
+
         for (let i = 0; i < matrix.length; i++) {
             mTmp.push(matrix[i]);
             if (mTmp.length == 4) {
@@ -544,6 +512,37 @@ function changeModel(model, listObject) {
         }
     }
 }
+
+function recursiveTransformation(rootNode, nodeName, lastModelMatrix, ans) {
+    if (rootNode == null) {
+        return;
+    }
+    var objectSelected = findObjectByPart(rootNode.root);
+    var matrix = calculateTransformationMatrix(objectSelected)
+    console.log(rootNode, matrix, lastModelMatrix)
+    var modelMatrix = m4.multiply(lastModelMatrix, matrix);
+    if (rootNode.root == nodeName) {
+        ans.value = modelMatrix;
+    }
+    if(rootNode.child != null) {
+      for (var i = 0; i < rootNode.child.length; i++) {
+        recursiveTransformation(rootNode.child[i], nodeName, modelMatrix, ans);
+      }
+    }
+  }
+
+function calculateTransformationMatrixForSave(object) {
+    matrix = object.transformationMatrix;
+    matrix = m4.translate(matrix, object.translation[0], object.translation[1], object.translation[2]);
+    matrix = m4.scale(matrix, object.scale[0], object.scale[1], object.scale[2]);
+    matrix = m4.translate(matrix, object.translation[0], object.translation[1], object.translation[2]);
+    matrix = m4.xRotate(matrix, degToRad(object.rotation[0]));
+    matrix = m4.yRotate(matrix, degToRad(object.rotation[1]));
+    matrix = m4.zRotate(matrix, degToRad(object.rotation[2]));
+    matrix = m4.translate(matrix, -object.translation[0], -object.translation[1], -object.translation[2]);
+    
+    return matrix;
+  }
 
 function getListTopology(topology) {
     let list = []
