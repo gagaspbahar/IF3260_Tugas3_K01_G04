@@ -83,14 +83,14 @@
               [1.0,0.0,0.0,1.0]
           ],
           "animation":{
-              "minAX": 0,
-              "maxAX": 0,
-              "minAY": 0,
-              "maxAY": 0,
-              "minAZ": 0,
-              "maxAZ": 0,
-              "incStart": 0
-          },
+            "minAX": 0,
+            "maxAX": 0,
+            "minAY": -15,
+            "maxAY": 15,
+            "minAZ": 0,
+            "maxAZ": 0,
+            "incStart": 0.5
+        },
           "textcoord": [
               0   , 0  ,
               0   , 0.5,
@@ -156,11 +156,11 @@
         "animation":{
             "minAX": 0,
             "maxAX": 0,
-            "minAY": 0,
-            "maxAY": 0,
+            "minAY": -15,
+            "maxAY": 15,
             "minAZ": 0,
             "maxAZ": 0,
-            "incStart": 0
+            "incStart": 0.5
         },
         "textcoord": [
             0   , 0  ,
@@ -225,14 +225,14 @@
           [0.0,1.0,0.0,1.0]
       ],
       "animation":{
-          "minAX": 0,
-          "maxAX": 0,
-          "minAY": 0,
-          "maxAY": 0,
-          "minAZ": 0,
-          "maxAZ": 0,
-          "incStart": 0
-      },
+        "minAX": 0,
+        "maxAX": 0,
+        "minAY": -15,
+        "maxAY": 15,
+        "minAZ": 0,
+        "maxAZ": 0,
+        "incStart": 0.5
+    },
       "textcoord": [
           0   , 0  ,
           0   , 0.5,
@@ -296,14 +296,14 @@
           [0.0,0.5,0.0,1]
       ],
       "animation":{
-          "minAX": 0,
-          "maxAX": 0,
-          "minAY": 0,
-          "maxAY": 0,
-          "minAZ": 0,
-          "maxAZ": 0,
-          "incStart": 0
-      },
+        "minAX": 0,
+        "maxAX": 0,
+        "minAY": -15,
+        "maxAY": 15,
+        "minAZ": 0,
+        "maxAZ": 0,
+        "incStart": 0.5
+    },
       "textcoord": [
           0   , 0  ,
           0   , 0.5,
@@ -367,14 +367,14 @@
           [0.0,0.0,1,1.0]
       ],
       "animation":{
-          "minAX": 0,
-          "maxAX": 0,
-          "minAY": 0,
-          "maxAY": 0,
-          "minAZ": 0,
-          "maxAZ": 0,
-          "incStart": 0
-      },
+        "minAX": 0,
+        "maxAX": 0,
+        "minAY": -15,
+        "maxAY": 15,
+        "minAZ": 0,
+        "maxAZ": 0,
+        "incStart": 0.5
+    },
       "textcoord": [
           0   , 0  ,
           0   , 0.5,
@@ -438,14 +438,14 @@
           [0.0,0.0,1,1.0]
       ],
       "animation":{
-          "minAX": 0,
-          "maxAX": 0,
-          "minAY": 0,
-          "maxAY": 0,
-          "minAZ": 0,
-          "maxAZ": 0,
-          "incStart": 0
-      },
+        "minAX": 0,
+        "maxAX": 0,
+        "minAY": -15,
+        "maxAY": 15,
+        "minAZ": 0,
+        "maxAZ": 0,
+        "incStart": 0.5
+    },
       "textcoord": [
           0   , 0  ,
           0   , 0.5,
@@ -509,14 +509,14 @@
           [0.0,0.5,0.0,1]
       ],
       "animation":{
-          "minAX": 0,
-          "maxAX": 0,
-          "minAY": 0,
-          "maxAY": 0,
-          "minAZ": 0,
-          "maxAZ": 0,
-          "incStart": 0
-      },
+        "minAX": 0,
+        "maxAX": 0,
+        "minAY": -15,
+        "maxAY": 15,
+        "minAZ": 0,
+        "maxAZ": 0,
+        "incStart": 0.5
+    },
       "textcoord": [
           0   , 0  ,
           0   , 0.5,
