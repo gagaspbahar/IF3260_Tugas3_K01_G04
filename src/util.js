@@ -218,7 +218,8 @@ const defaultModel ={
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0
-            }
+            },
+            "child":["head", "left arm", "right arm", "left leg", "right leg"]
         },
         {
             "part": "right leg",
@@ -247,7 +248,8 @@ const defaultModel ={
                 "minAZ": -15,
                 "maxAZ": 15,
                 "incStart": 0.5
-            }
+            },
+            "child":[]
         },
         {
             "part": "left leg",
@@ -276,7 +278,8 @@ const defaultModel ={
                 "minAZ": -15,
                 "maxAZ": 15,
                 "incStart": -0.5
-            }
+            },
+            "child":[]
         },
         {
             "part": "right arm",
@@ -305,7 +308,8 @@ const defaultModel ={
                 "minAZ": -15,
                 "maxAZ": 15,
                 "incStart": 0.5
-            }
+            },
+            "child":[]
         },
         {
             "part": "left arm",
@@ -334,7 +338,8 @@ const defaultModel ={
                 "minAZ": -15,
                 "maxAZ": 15,
                 "incStart": -0.5
-            }
+            },
+            "child":[]
         },
         {
             "part": "head",
@@ -363,7 +368,8 @@ const defaultModel ={
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            }
+            },
+            "child":[]
         }
     ]
 }

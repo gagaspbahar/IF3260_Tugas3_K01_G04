@@ -303,6 +303,7 @@ function loadModel() {
         scale: [1,1,1],
         rotation: [0, 0, 0],
         animation: point.animation,
+        child: point.child,
       })
       texcoordsSorted.push(textCoordination)
       colorSorted.push(tmpColor);
