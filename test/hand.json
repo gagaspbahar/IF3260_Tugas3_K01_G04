@@ -230,7 +230,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "palm",
@@ -301,7 +304,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "pinky1",
@@ -372,7 +378,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "pinky2",
@@ -443,7 +452,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "pinky3",
@@ -514,7 +526,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "ring1",
@@ -585,7 +600,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "ring2",
@@ -656,7 +674,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "ring3",
@@ -727,7 +748,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "middle1",
@@ -798,7 +822,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "middle2",
@@ -869,7 +896,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "middle3",
@@ -940,7 +970,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "index1",
@@ -1011,7 +1044,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "index2",
@@ -1082,7 +1118,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "index3",
@@ -1153,7 +1192,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "thumb1",
@@ -1224,7 +1266,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "thumb2",
@@ -1295,7 +1340,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         }
     ],
     "tree": {
