@@ -317,7 +317,7 @@ function loadModel() {
   deleteOptionPart();
   addOptionPart();
   resetDefault();
-  generateTreeButtonsRecursive(parentChildLookup, 1);
+  resetComponentTree();
   drawScene();
 }
 
@@ -342,6 +342,7 @@ function resetComponentTree() {
   while (container.firstChild) {
     container.removeChild(container.firstChild);
   }
+  generateTreeButtonsRecursive(parentChildLookup, 1);
 }
 
 function selectPart(part) {
