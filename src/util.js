@@ -249,7 +249,7 @@ const defaultModel ={
                 "maxAZ": 15,
                 "incStart": 0.5
             },
-            "child":[]
+            "child":null
         },
         {
             "part": "left leg",
@@ -279,7 +279,7 @@ const defaultModel ={
                 "maxAZ": 15,
                 "incStart": -0.5
             },
-            "child":[]
+            "child":null
         },
         {
             "part": "right arm",
@@ -309,7 +309,7 @@ const defaultModel ={
                 "maxAZ": 15,
                 "incStart": 0.5
             },
-            "child":[]
+            "child":null
         },
         {
             "part": "left arm",
@@ -339,7 +339,7 @@ const defaultModel ={
                 "maxAZ": 15,
                 "incStart": -0.5
             },
-            "child":[]
+            "child":null
         },
         {
             "part": "head",
@@ -369,18 +369,18 @@ const defaultModel ={
                 "maxAZ": 0,
                 "incStart": 0.5
             },
-            "child":[]
+            "child":null
         }
         
     ],
     "tree": {
         "root": "body",
         "child":[
-            {"root": "head", "child": []},
-            {"root": "left arm", "child": []},
-            {"root": "right arm", "child": []},
-            {"root": "left leg", "child": []},
-            {"root": "right leg", "child": []}
+            {"root": "head", "child": null},
+            {"root": "left arm", "child": null},
+            {"root": "right arm", "child": null},
+            {"root": "left leg", "child": null},
+            {"root": "right leg", "child": null}
         ]
     }
 }

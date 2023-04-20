@@ -304,6 +304,7 @@ function loadModel() {
         scale: [1,1,1],
         rotation: [0, 0, 0],
         animation: point.animation,
+        transformationMatrix: m4.identity(),
       })
       texcoordsSorted.push(textCoordination)
       colorSorted.push(tmpColor);
@@ -330,7 +331,7 @@ function generateTreeButtonsRecursive(object, depth) {
   button.setAttribute("onclick", "selectPart(this.id)");
   button.style.marginLeft = depth * 15 + "px";
   container.appendChild(button);
-  if (object.child.length > 0) {
+  if (object.child != null && object.child.length > 0) {
     for(let j = 0; j < object.child.length; j++) {
       generateTreeButtonsRecursive(object.child[j], depth + 1);
     }
@@ -395,7 +396,6 @@ function onReaderLoad(event) {
 document.getElementById("load").addEventListener("change", onChange);
 
 function drawScene() {
-  var body = listObject[0];
   if (reqAnime) {
     cancelAnimationFrame(reqAnime);
   }
@@ -408,87 +408,8 @@ function drawScene() {
   gl.enable(gl.CULL_FACE);
   gl.enable(gl.DEPTH_TEST);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  for (let i = 0; i < listObject.length; i++) {
-    var objectSelected = listObject[i];
-    var count = objectSelected.vertice.length / 2;
-    render(objectSelected.vertice, objectSelected.color, objectSelected.textcoord);
-    var matrix = m4.identity();
-
-    var cameraMatrix = m4.identity();
-    var zoom = cameraRadius / 20;
-    cameraMatrix = m4.lookAt(cameraPosition, cameraTarget, up, zoom);
-    
-    var viewMatrix = m4.inverse(cameraMatrix);
-    var projectionMatrix = m4.identity();
-
-    if (projectionMode == "orthographic") {
-      projectionMatrix = m4.orthographic(left, right, bottom, topFov, near, far);
-    } else if (projectionMode == "perspective") {
-      projectionMatrix = m4.perspective(fieldOfView, aspect, zNear, zFar);
-    } else if (projectionMode == "oblique") {
-      projectionMatrix = m4.oblique(left, right, bottom, topFov, near, far, 45, 45);
-    }
-
-    if (i==0) {
-      matrix = m4.translate(
-        matrix,
-        body.translation[0],
-        body.translation[1],
-        body.translation[2]
-        );
-      matrix = m4.scale(matrix, body.scale[0], body.scale[1], body.scale[2]);
-      matrix = m4.translate(matrix, body.centerObject[0], body.centerObject[1], body.centerObject[2])
-      matrix = m4.xRotate(matrix, degToRad(body.rotation[0]));
-      matrix = m4.yRotate(matrix, degToRad(body.rotation[1]));
-      matrix = m4.zRotate(matrix, degToRad(body.rotation[2]));
-      matrix = m4.translate(matrix, -body.centerObject[0], -body.centerObject[1], -body.centerObject[2])
   
-    }
-    else {
-      matrix = m4.translate(
-        matrix,
-        objectSelected.translation[0] + body.translation[0],
-        objectSelected.translation[1] + body.translation[1],
-        objectSelected.translation[2] + body.translation[2]
-        );
-      matrix = m4.scale(matrix, body.scale[0], body.scale[1], body.scale[2]);
-      matrix = m4.scale(matrix, objectSelected.scale[0], objectSelected.scale[1], objectSelected.scale[2]);
-      
-      matrix = m4.translate(matrix, body.centerObject[0], body.centerObject[1], body.centerObject[2])
-      matrix = m4.xRotate(matrix, degToRad(body.rotation[0]));
-      matrix = m4.yRotate(matrix, degToRad(body.rotation[1]));
-      matrix = m4.zRotate(matrix, degToRad(body.rotation[2]));
-      matrix = m4.translate(matrix, objectSelected.centerObject[0], objectSelected.centerObject[1], objectSelected.centerObject[2])
-      matrix = m4.xRotate(matrix, degToRad(objectSelected.rotation[0]));
-      matrix = m4.yRotate(matrix, degToRad(objectSelected.rotation[1]));
-      matrix = m4.zRotate(matrix, degToRad(objectSelected.rotation[2]));
-      matrix = m4.translate(matrix, -objectSelected.centerObject[0], -objectSelected.centerObject[1], -objectSelected.centerObject[2])
-      matrix = m4.translate(matrix, -body.centerObject[0], -body.centerObject[1], -body.centerObject[2])
-    }
-
-    matrix = m4.multiply(viewMatrix, matrix);
-    matrix = m4.multiply(projectionMatrix, matrix);
-
-    var worldMatrix = matrix;
-    var worldInverseMatrix = m4.inverse(worldMatrix);
-
-    var modelXRotationRadians = degToRad(0);
-    var modelYRotationRadians = degToRad(0);
-    var worldMatrix2 = m4.xRotation(modelXRotationRadians);
-    worldMatrix2 = m4.yRotate(worldMatrix2, modelYRotationRadians);
-    var worldInverseTransposeMatrix = m4.transpose(worldInverseMatrix);
-
-
-    gl.uniformMatrix4fv(matrixLocation, false, matrix);
-    gl.uniformMatrix4fv(worldInverseTransposeLocation, false, worldInverseTransposeMatrix);
-    gl.uniform3fv(reverseLightDirectionLocation, normalize(lightDirection));
-    //Untuk Environment Texture
-    gl.uniformMatrix4fv(projectionLocation, false, projectionMatrix);
-    gl.uniformMatrix4fv(viewLocation, false, viewMatrix);
-    gl.uniformMatrix4fv(worldLocation, false, worldMatrix2); //Ragu
-    gl.uniform3fv(worldCameraPositionLocation, cameraPosition);
-    gl.drawElements(this.gl.TRIANGLES, count, gl.UNSIGNED_SHORT, 0);
-  }
+  draw(parentChildLookup, m4.identity());
   
   if (animationActive) {
     listObject.forEach(element => {
@@ -513,6 +434,86 @@ function drawScene() {
     });
     reqAnime = requestAnimationFrame(drawScene);
   }
+}
+
+function findObjectByPart(part) {
+  for (var i = 0; i < listObject.length; i++) {
+    if (listObject[i].part == part) {
+      return listObject[i];
+    }
+  }
+}
+
+function calculateTransformationMatrix(object) {
+  matrix = object.transformationMatrix;
+  matrix = m4.translate(matrix, object.translation[0], object.translation[1], object.translation[2]);
+  matrix = m4.scale(matrix, object.scale[0], object.scale[1], object.scale[2]);
+  matrix = m4.xRotate(matrix, degToRad(object.rotation[0]));
+  matrix = m4.yRotate(matrix, degToRad(object.rotation[1]));
+  matrix = m4.zRotate(matrix, degToRad(object.rotation[2]));
+  return matrix;
+}
+
+function draw(rootNode, lastModelMatrix) {
+  console.log(listObject)
+  console.log(rootNode)
+  if (rootNode != null) {
+    var objectSelected = findObjectByPart(rootNode.root);
+    console.log(objectSelected)
+    var matrix = calculateTransformationMatrix(objectSelected)
+    var modelMatrix = m4.multiply(lastModelMatrix, matrix);
+    renderSingleNode(objectSelected, modelMatrix)
+    if(rootNode.child != null) {
+      for (var i = 0; i < rootNode.child.length; i++) {
+        draw(rootNode.child[i], modelMatrix);
+      }
+    }
+  }
+}
+
+function renderSingleNode(part, modelMatrix) {
+    var objectSelected = part;
+    var count = objectSelected.vertice.length / 2;
+    render(objectSelected.vertice, objectSelected.color, objectSelected.textcoord);
+    var matrix = m4.identity();
+
+    var cameraMatrix = m4.identity();
+    var zoom = cameraRadius / 20;
+    cameraMatrix = m4.lookAt(cameraPosition, cameraTarget, up, zoom);
+    
+    var viewMatrix = m4.inverse(cameraMatrix);
+    var projectionMatrix = m4.identity();
+
+    if (projectionMode == "orthographic") {
+      projectionMatrix = m4.orthographic(left, right, bottom, topFov, near, far);
+    } else if (projectionMode == "perspective") {
+      projectionMatrix = m4.perspective(fieldOfView, aspect, zNear, zFar);
+    } else if (projectionMode == "oblique") {
+      projectionMatrix = m4.oblique(left, right, bottom, topFov, near, far, 45, 45);
+    }
+
+    matrix = m4.multiply(modelMatrix, matrix);
+    matrix = m4.multiply(viewMatrix, matrix);
+    matrix = m4.multiply(projectionMatrix, matrix);
+
+    var worldMatrix = matrix;
+    var worldInverseMatrix = m4.inverse(worldMatrix);
+
+    var modelXRotationRadians = degToRad(0);
+    var modelYRotationRadians = degToRad(0);
+    var worldMatrix2 = m4.xRotation(modelXRotationRadians);
+    worldMatrix2 = m4.yRotate(worldMatrix2, modelYRotationRadians);
+    var worldInverseTransposeMatrix = m4.transpose(worldInverseMatrix);
+
+    gl.uniformMatrix4fv(matrixLocation, false, matrix);
+    gl.uniformMatrix4fv(worldInverseTransposeLocation, false, worldInverseTransposeMatrix);
+    gl.uniform3fv(reverseLightDirectionLocation, normalize(lightDirection));
+    //Untuk Environment Texture
+    gl.uniformMatrix4fv(projectionLocation, false, projectionMatrix);
+    gl.uniformMatrix4fv(viewLocation, false, viewMatrix);
+    gl.uniformMatrix4fv(worldLocation, false, worldMatrix2); //Ragu
+    gl.uniform3fv(worldCameraPositionLocation, cameraPosition);
+    gl.drawElements(this.gl.TRIANGLES, count, gl.UNSIGNED_SHORT, 0);
 }
 
 function resetDefault() {

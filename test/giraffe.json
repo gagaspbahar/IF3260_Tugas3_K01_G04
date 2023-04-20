@@ -672,12 +672,12 @@
     "tree": {
         "root": "body",
         "child": [
-            {"root":"left front leg", "child":[]},
-            {"root":"right front leg", "child":[]},
-            {"root":"left back leg", "child":[]},
-            {"root":"right back leg", "child":[]},
+            {"root":"left front leg", "child":null},
+            {"root":"right front leg", "child":null},
+            {"root":"left back leg", "child":null},
+            {"root":"right back leg", "child":null},
             {"root":"neck", "child":[
-                {"root":"head", "child":[]}
+                {"root":"head", "child":null}
             ]}
         ]
     }

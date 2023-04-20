@@ -568,12 +568,12 @@
           {"root": "front 1", "child":[
               {"root": "front 2", "child":[
                   {"root": "front 3", "child":[
-                      {"root": "front 4", "child":[]}
+                      {"root": "front 4", "child":null}
                   ]}
               ]}
           ]},
           {"root": "back 1", "child":[
-              {"root": "back 2", "child":[]}
+              {"root": "back 2", "child":null}
           ]}
       ]
   }
