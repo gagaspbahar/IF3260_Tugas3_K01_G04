@@ -97,42 +97,42 @@ document.getElementById("textureBump").onclick = function () {
 };
 
 const updateAngleX = () => {
-  var angleX = document.getElementById("angleX").value;
+  var angleX = parseFloat(document.getElementById("angleX").value);
   rotation[0] = angleX;
   document.getElementById("angleX-value").innerHTML = angleX;
   changeObjectSelected();
 };
 
 const updateAngleY = () => {
-  var angleY = document.getElementById("angleY").value;
+  var angleY = parseFloat(document.getElementById("angleY").value);
   rotation[1] = angleY;
   document.getElementById("angleY-value").innerHTML = angleY;
   changeObjectSelected();
 };
 
 const updateAngleZ = () => {
-  var angleZ = document.getElementById("angleZ").value;
+  var angleZ = parseFloat(document.getElementById("angleZ").value);
   rotation[2] = angleZ;
   document.getElementById("angleZ-value").innerHTML = angleZ;
   changeObjectSelected();
 };
 
 const updateScaleX = () => {
-  var scaleX = document.getElementById("scaleX").value;
+  var scaleX = parseFloat(document.getElementById("scaleX").value);
   scale[0] = scaleX;
   document.getElementById("scaleX-value").innerHTML = scaleX;
   changeObjectSelected();
 };
 
 const updateScaleY = () => {
-  var scaleY = document.getElementById("scaleY").value;
+  var scaleY = parseFloat(document.getElementById("scaleY").value);
   scale[1] = scaleY;
   document.getElementById("scaleY-value").innerHTML = scaleY;
   changeObjectSelected();
 };
 
 const updateScaleZ = () => {
-  var scaleZ = document.getElementById("scaleZ").value;
+  var scaleZ = parseFloat(document.getElementById("scaleZ").value);
   scale[2] = scaleZ;
   document.getElementById("scaleZ-value").innerHTML = scaleZ;
   changeObjectSelected();
@@ -446,20 +446,31 @@ function drawScene() {
     listObject.forEach(element => {
       if (element.animation.minAX != element.animation.maxAX) {
         element.rotation[0] += element.animation.incStart;
-        if (element.rotation[0] >= element.animation.maxAX || element.rotation[0] <= element.animation.minAX) {
+        if (element.rotation[0] == element.animation.maxAX || element.rotation[0] == element.animation.minAX) {
           element.animation.incStart = -element.animation.incStart;
         }
+        else if (element.rotation[0] > element.animation.maxAX || element.rotation[0] < element.animation.minAX) {
+          element.rotation[0] = 0
+        }
+
       }
       if (element.animation.minAY != element.animation.maxAY) {
+        console.log(element.rotation[1]);
         element.rotation[1] += element.animation.incStart;
-        if (element.rotation[1] >= element.animation.maxAY || element.rotation[1] <= element.animation.minAY) {
+        if (element.rotation[1] == element.animation.maxAY || element.rotation[1] == element.animation.minAY) {
           element.animation.incStart = -element.animation.incStart;
         }
+        else if (element.rotation[1] > element.animation.maxAY || element.rotation[1] < element.animation.minAY) {
+          element.rotation[1] = 0
+        } 
       }
       if (element.animation.minAZ != element.animation.maxAZ) {
         element.rotation[2] += element.animation.incStart;
-        if (element.rotation[2] >= element.animation.maxAZ || element.rotation[2] <= element.animation.minAZ) {
+        if (element.rotation[2] == element.animation.maxAZ || element.rotation[2] == element.animation.minAZ) {
           element.animation.incStart = -element.animation.incStart;
+        }
+        else if (element.rotation[2] > element.animation.maxAZ || element.rotation[2] < element.animation.minAZ) {
+          element.rotation[2] = 0
         }
       }
     });
