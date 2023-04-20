@@ -84,16 +84,25 @@ var attr_uv = gl.getAttribLocation(program, "a_uv");
 gl.viewport(0, 0, canvas.width, canvas.height);
 
 document.getElementById("textureImage").onclick = function () {
+  loadTexture("./assets/wood.png");
   textureOption = 0;
-  drawScene();
+  setTimeout(function() {
+    drawScene();
+  }, 100);
 };
 document.getElementById("textureEnvirontment").onclick = function () {
+  window.onload = loadEnvironmentTexture();
   textureOption = 1;
-  drawScene();
+  setTimeout(function() {
+    drawScene();
+  }, 100);
 };
 document.getElementById("textureBump").onclick = function () {
+  loadTexture("./assets/bump_normal.png");
   textureOption = 2;
-  drawScene();
+  setTimeout(function() {
+    drawScene();
+  }, 100);
 };
 
 const updateAngleX = () => {
@@ -430,6 +439,7 @@ function drawScene() {
   if (reqAnime) {
     cancelAnimationFrame(reqAnime);
   }
+  
 
   // Clear the canvas
   gl.clearColor(0, 0, 0, 0);
@@ -626,7 +636,8 @@ function loadTexture(url) {
   };
   requestCORSIfNotSameOrigin(image, url);
   image.src = url;
-
+  
+  
   return texture;
 }
 
@@ -690,23 +701,7 @@ function loadEnvironmentTexture(){
   gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
 }
 
-// function init(){
-//   if (textureOption == 0){
-//     loadTexture("./assets/wood.png");
-//   } else if (textureOption == 1){
-//     loadEnvironmentTexture();
-//   } else if (textureOption == 2){
-//     loadTexture("./assets/bump_normal.png");
-//   }
-// }
-
-// Image
 window.onload = loadTexture("./assets/wood.png");
-// Environment
-window.onload = loadEnvironmentTexture();
-// Bump
-//window.onload = loadTexture("./assets/bump_normal.png");
-
 
 function addOptionPart() {
   for (var i = 0; i < articulatedModel.edge.length; i++) {
