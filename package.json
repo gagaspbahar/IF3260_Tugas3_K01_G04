@@ -1,0 +1,26 @@
+{
+  "name": "if3260_tugas3_k01_g04",
+  "version": "1.0.0",
+  "description": "articulated object webgl",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx http-server ./src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gagaspbahar/IF3260_Tugas3_K01_G04.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gagaspbahar/IF3260_Tugas3_K01_G04/issues"
+  },
+  "homepage": "https://github.com/gagaspbahar/IF3260_Tugas3_K01_G04#readme",
+  "dependencies": {
+    "http-server": "^14.1.1"
+  }
+}
