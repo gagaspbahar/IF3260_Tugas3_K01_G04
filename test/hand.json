@@ -1297,5 +1297,43 @@
                 "incStart": 0.5
             }
         }
-    ]
+    ],
+    "tree": {
+        "root": "base",
+        "child": [
+          {
+            "root": "palm",
+            "child": [
+              {
+                "root": "pinky1",
+                "child": [
+                  { "root": "pinky2", "child": [{ "root": "pinky3", "child": [] }] }
+                ]
+              },
+              {
+                "root": "ring1",
+                "child": [
+                  { "root": "ring2", "child": [{ "root": "ring3", "child": [] }] }
+                ]
+              },
+              {
+                "root": "middle1",
+                "child": [
+                  {
+                    "root": "middle2",
+                    "child": [{ "root": "middle3", "child": [] }]
+                  }
+                ]
+              },
+              {
+                "root": "index1",
+                "child": [
+                  { "root": "index2", "child": [{ "root": "index3", "child": [] }] }
+                ]
+              },
+              { "root": "thumb1", "child": [{ "root": "thumb2", "child": [] }] }
+            ]
+          }
+        ]
+      }
 }

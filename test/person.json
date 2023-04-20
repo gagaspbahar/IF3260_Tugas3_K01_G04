@@ -215,8 +215,7 @@
                 0.5 , 1  ,
                 0.75, 0.5,
                 0.75, 1
-                ],
-                "child": ["head", "left arm", "right arm", "left leg", "right leg"]
+                ]
         },
         {
             "part": "right leg",
@@ -287,8 +286,7 @@
                 0.5 , 1  ,
                 0.75, 0.5,
                 0.75, 1
-                ],
-                "child": []
+                ]
         },
         {
             "part": "left leg",
@@ -359,8 +357,7 @@
                 0.5 , 1  ,
                 0.75, 0.5,
                 0.75, 1
-                ],
-                "child": []
+                ]
         },
         {
             "part": "right arm",
@@ -431,8 +428,7 @@
                 0.5 , 1  ,
                 0.75, 0.5,
                 0.75, 1
-                ],
-                "child": []
+                ]
         },
         {
             "part": "left arm",
@@ -503,8 +499,7 @@
                 0.5 , 1  ,
                 0.75, 0.5,
                 0.75, 1
-                ],
-                "child": []
+                ]
         },
         {
             "part": "head",
@@ -575,8 +570,17 @@
                 0.5 , 1  ,
                 0.75, 0.5,
                 0.75, 1
-                ],
-                "child": []
+                ]
         }
-    ]
+    ],
+    "tree": {
+        "root": "body",
+        "child":[
+            {"root": "head", "child": []},
+            {"root": "left arm", "child": []},
+            {"root": "right arm", "child": []},
+            {"root": "left leg", "child": []},
+            {"root": "right leg", "child": []}
+        ]
+    }
 }

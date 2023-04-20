@@ -18,6 +18,14 @@
   border-radius: 20px;
 }
 
+.scrollable-container {
+  height: 200px;
+  width: 200px;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 
 .save-or-load {
   margin-top: 40px;

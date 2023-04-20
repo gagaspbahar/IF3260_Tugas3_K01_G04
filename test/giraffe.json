@@ -240,14 +240,7 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0
-            },
-            "child":[
-                "left front leg",
-                "right front leg",
-                "left back leg",
-                "right back leg",
-                "neck"
-            ]
+            }
         },
         {
             "part": "left front leg",
@@ -318,8 +311,7 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            },
-            "child":[]
+            }
         },
         {
             "part": "right front leg",
@@ -390,8 +382,7 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": -0.5
-            },
-            "child":[]
+            }
         },
         {
             "part": "left back leg",
@@ -462,8 +453,7 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": -0.5
-            },
-            "child":[]
+            }
         },
         {
             "part": "right back leg",
@@ -534,8 +524,7 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            },
-            "child":[]
+            }
         },
         {
             "part": "neck",
@@ -606,10 +595,7 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            },
-            "child":[
-                "head"
-            ]
+            }
         },
         {
             "part": "head",
@@ -680,8 +666,19 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            },
-            "child":[]
+            }
         }
-    ]
+    ],
+    "tree": {
+        "root": "body",
+        "child": [
+            {"root":"left front leg", "child":[]},
+            {"root":"right front leg", "child":[]},
+            {"root":"left back leg", "child":[]},
+            {"root":"right back leg", "child":[]},
+            {"root":"neck", "child":[
+                {"root":"head", "child":[]}
+            ]}
+        ]
+    }
 }

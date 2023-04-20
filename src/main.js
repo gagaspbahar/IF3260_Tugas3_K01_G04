@@ -20,6 +20,7 @@ var cameraRadius = 20;
 var cameraTarget = [0, 0, 0];
 var cameraPosition = [0, 0, 5];
 var listObject = [];
+var parentChildLookup = {};
 
 var lightDirection = [0.5, 0.7, -1];
 
@@ -303,7 +304,6 @@ function loadModel() {
         scale: [1,1,1],
         rotation: [0, 0, 0],
         animation: point.animation,
-        child: point.child,
       })
       texcoordsSorted.push(textCoordination)
       colorSorted.push(tmpColor);
@@ -312,10 +312,43 @@ function loadModel() {
   texcoords = texcoordsSorted;
   vertices = vertexSorted;
   colors = colorSorted;
+  parentChildLookup = articulatedModel.tree;
   listObject[0].centerObject = setCenterPosition();
   deleteOptionPart();
   addOptionPart();
   resetDefault();
+  generateTreeButtonsRecursive(parentChildLookup, 1);
+  drawScene();
+}
+
+function generateTreeButtonsRecursive(object, depth) {
+  const container = document.getElementById("scrollable-container");
+  const button = document.createElement("button");
+  button.innerHTML = object.root;
+  button.setAttribute("id", object.root);
+  button.setAttribute("class", "tree-button");
+  button.setAttribute("onclick", "selectPart(this.id)");
+  button.style.marginLeft = depth * 15 + "px";
+  container.appendChild(button);
+  if (object.child.length > 0) {
+    for(let j = 0; j < object.child.length; j++) {
+      generateTreeButtonsRecursive(object.child[j], depth + 1);
+    }
+  }
+}
+
+function resetComponentTree() {
+  const container = document.getElementById("scrollable-container");
+  while (container.firstChild) {
+    container.removeChild(container.firstChild);
+  }
+}
+
+function selectPart(part) {
+  partSelected = part;
+  const componentText = document.getElementById("selected-component");
+  componentText.innerHTML = partSelected;
+  updateUI();
   drawScene();
 }
 
@@ -483,6 +516,7 @@ function drawScene() {
 
 function resetDefault() {
   resetAllObject();
+  resetComponentTree();
   translation = [0,0,0];
   rotation = [0,0,0]
   scale = [1,1,1];
@@ -632,6 +666,7 @@ function addOptionPart() {
     if (i == 0) {
       partSelected = articulatedModel.edge[i].part;
       option.selected = true;
+      selectPart(articulatedModel.edge[i].part)
     }
     document.getElementById("object-part").appendChild(option);
   }

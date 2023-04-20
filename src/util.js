@@ -371,7 +371,18 @@ const defaultModel ={
             },
             "child":[]
         }
-    ]
+        
+    ],
+    "tree": {
+        "root": "body",
+        "child":[
+            {"root": "head", "child": []},
+            {"root": "left arm", "child": []},
+            {"root": "right arm", "child": []},
+            {"root": "left leg", "child": []},
+            {"root": "right leg", "child": []}
+        ]
+    }
 }
 
 
