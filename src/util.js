@@ -219,7 +219,10 @@ const defaultModel ={
                 "maxAZ": 0,
                 "incStart": 0
             },
-            "child":["head", "left arm", "right arm", "left leg", "right leg"]
+            "child":["head", "left arm", "right arm", "left leg", "right leg"],
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "right leg",
@@ -249,7 +252,10 @@ const defaultModel ={
                 "maxAZ": 15,
                 "incStart": 0.5
             },
-            "child":null
+            "child":null,
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "left leg",
@@ -279,7 +285,10 @@ const defaultModel ={
                 "maxAZ": 15,
                 "incStart": -0.5
             },
-            "child":null
+            "child":null,
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "right arm",
@@ -309,7 +318,10 @@ const defaultModel ={
                 "maxAZ": 15,
                 "incStart": 0.5
             },
-            "child":null
+            "child":null,
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "left arm",
@@ -339,7 +351,10 @@ const defaultModel ={
                 "maxAZ": 15,
                 "incStart": -0.5
             },
-            "child":null
+            "child":null,
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "head",
@@ -369,7 +384,10 @@ const defaultModel ={
                 "maxAZ": 0,
                 "incStart": 0.5
             },
-            "child":null
+            "child":null,
+            "animframes":[
+                [0, 0, 0]
+            ]
         }
         
     ],
@@ -536,9 +554,9 @@ function calculateTransformationMatrixForSave(object) {
     matrix = m4.translate(matrix, object.translation[0], object.translation[1], object.translation[2]);
     matrix = m4.scale(matrix, object.scale[0], object.scale[1], object.scale[2]);
     matrix = m4.translate(matrix, object.translation[0], object.translation[1], object.translation[2]);
-    matrix = m4.xRotate(matrix, degToRad(object.rotation[0]));
-    matrix = m4.yRotate(matrix, degToRad(object.rotation[1]));
-    matrix = m4.zRotate(matrix, degToRad(object.rotation[2]));
+    matrix = m4.xRotate(matrix, degToRad(object.animframes[currentFrame][0]));
+    matrix = m4.yRotate(matrix, degToRad(object.animframes[currentFrame][1]));
+    matrix = m4.zRotate(matrix, degToRad(object.animframes[currentFrame][2]));
     matrix = m4.translate(matrix, -object.translation[0], -object.translation[1], -object.translation[2]);
     
     return matrix;

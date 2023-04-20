@@ -240,7 +240,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "left front leg",
@@ -311,7 +314,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "right front leg",
@@ -382,7 +388,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": -0.5
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "left back leg",
@@ -453,7 +462,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": -0.5
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "right back leg",
@@ -524,7 +536,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "neck",
@@ -595,7 +610,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         },
         {
             "part": "head",
@@ -666,7 +684,10 @@
                 "minAZ": 0,
                 "maxAZ": 0,
                 "incStart": 0.5
-            }
+            },
+            "animframes":[
+                [0, 0, 0]
+            ]
         }
     ],
     "tree": {

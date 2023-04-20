@@ -317,7 +317,82 @@
         </div>
         <div class="animation">
           <button id="animation" onclick="toggleAnimation()">Toggle Animation</button> <label id="animation-label">Off</label>
-      </div>
+        </div>
+        <h2>Animation Control</h2>
+        <table>
+          <tr>
+            <td colspan="4" style="text-align:right">
+              <button id="play-anim" onclick="playAnim()">Play</button>
+            </td>
+            <td colspan="4" style="text-align:left">
+              <button id="pause-anim" onclick="pauseAnim()">Pause</button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              You are now at a frame
+            </td>
+            <td>
+              <button id="first-anim">
+                <<
+              </button>
+            </td>
+            <td>
+              <button id="back-anim" onclick="backFrame()">
+                <
+              </button>
+            </td>
+            <td colspan="2" style="width:20px; text-align:center">
+              <span id="current-frame">1</span>
+            </td>
+            <td>
+              <button id="next-anim" onclick="nextFrame()">
+                >
+              </button>
+            </td>
+            <td>
+              <button id="last-anim">
+                >>
+              </button>
+            </td>
+            <td>
+              out of <span id="frames-count">x</span> frames
+            </td>
+          </tr>
+          <tr>
+            <td colspan="4" style="text-align:right">
+              <button id="add-back-frame" onclick="newBackFrame()">
+                Add frame before
+              </button>
+            </td>
+            <td colspan="4" style="text-align:left">
+              <button id="add-next-frame" onclick="newNextFrame()">
+                Add frame after
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <span>Time between frames:</span>
+            </td>
+            <td>
+              <label id="anim-time-value">0.5</label>
+            </td>
+            <td colspan="6">
+              <input
+              type="range"
+              id="anim-time"
+              name="anim-time"
+              min="0.1"
+              max="1.0"
+              value="0.5"
+              step="0.1"
+              oninput="updateAnimTime()"
+              style="align-items:center"
+              />
+            </td>
+          </tr>
+        </table>
         <div class="default-input">
           <button id="default-btn" onclick="resetDefault()" type="submit">
             Reset Default

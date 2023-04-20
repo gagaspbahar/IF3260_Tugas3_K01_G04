@@ -22,6 +22,9 @@ var cameraTarget = [0, 0, 0];
 var cameraPosition = [0, 0, 5];
 var listObject = [];
 var parentChildLookup = {};
+var animTime = 0.1;
+var currentFrame = 0;
+var countFrame = 1;
 
 var lightDirection = [0.5, 0.7, -1];
 
@@ -201,6 +204,11 @@ const updateProjectionMode = () => {
   drawScene();
 };
 
+const updateAnimTime = () => {
+  animTime = parseFloat(document.getElementById("anim-time").value);
+  document.getElementById("anim-time-value").innerHTML = animTime;
+};
+
 const toggleShading = () => {
   shadingEnabled = !shadingEnabled;
   var text = shadingEnabled ? "On" : "Off";
@@ -321,35 +329,35 @@ function loadModel() {
   let texcoordsSorted = [];
   let centerObjectSorted = [];
   centerObjectSorted.push(setCenterPosition())
-    for (let i = 0; i < articulatedModel.edge.length; i++) {
-      let point = articulatedModel.edge[i];
-      let textCoordination = articulatedModel.edge[i].textcoord;
-      let listPoint = []
-      let tmpColor = [];
-      let position = [];
-      for (let j = 0; j < point.topology.length; j++) {
-        for (let k = 0; k < 4; k++) {
-          position = position.concat(vertice[point.topology[j][k]]);
-          listPoint.push(vertice[point.topology[j][k]])
-        }
-        tmpColor.push(point.color[j]);
+  for (let i = 0; i < articulatedModel.edge.length; i++) {
+    let point = articulatedModel.edge[i];
+    let textCoordination = articulatedModel.edge[i].textcoord;
+    let listPoint = []
+    let tmpColor = [];
+    let position = [];
+    for (let j = 0; j < point.topology.length; j++) {
+      for (let k = 0; k < 4; k++) {
+        position = position.concat(vertice[point.topology[j][k]]);
+        listPoint.push(vertice[point.topology[j][k]])
       }
-      listObject.push({
-        part : point.part,
-        vertice : position,
-        color : tmpColor,
-        textcoord : textCoordination,
-        centerObject : setCenterObject(listPoint),
-        translation : [0,0,0],
-        scale: [1,1,1],
-        rotation: [0, 0, 0],
-        animation: point.animation,
-        transformationMatrix: m4.identity(),
-      })
-      texcoordsSorted.push(textCoordination)
-      colorSorted.push(tmpColor);
-      vertexSorted.push(position);
+      tmpColor.push(point.color[j]);
     }
+    listObject.push({
+      part : point.part,
+      vertice : position,
+      color : tmpColor,
+      textcoord : textCoordination,
+      centerObject : setCenterObject(listPoint),
+      translation : [0,0,0],
+      scale: [1,1,1],
+      animation: point.animation,
+      transformationMatrix: m4.identity(),
+      animframes: point.animframes
+    })
+    texcoordsSorted.push(textCoordination)
+    colorSorted.push(tmpColor);
+    vertexSorted.push(position);
+  }
   texcoords = texcoordsSorted;
   vertices = vertexSorted;
   colors = colorSorted;
@@ -357,6 +365,7 @@ function loadModel() {
   listObject[0].centerObject = setCenterPosition();
   deleteOptionPart();
   addOptionPart();
+  loadAnimButtons();
   resetDefault();
   resetComponentTree();
   drawScene();
@@ -435,6 +444,110 @@ function onReaderLoad(event) {
 
 document.getElementById("load").addEventListener("change", onChange);
 
+const loadAnimButtons = () => {
+  countFrame = listObject[0].animframes.length;
+  document.getElementById('current-frame').innerHTML = currentFrame + 1;
+  document.getElementById('frames-count').innerHTML = countFrame;
+  if (countFrame <= 1) {
+    document.getElementById('play-anim').disabled = true;
+    document.getElementById('pause-anim').disabled = true;
+    document.getElementById('first-anim').disabled = true;
+    document.getElementById('back-anim').disabled = true;
+    document.getElementById('last-anim').disabled = true;
+    document.getElementById('next-anim').disabled = true;
+  }
+}
+
+const updateAnimButtons = () => {
+  countFrame = listObject[0].animframes.length;
+  document.getElementById('current-frame').innerHTML = currentFrame + 1;
+  document.getElementById('frames-count').innerHTML = countFrame;
+  document.getElementById('play-anim').disabled = false;
+  document.getElementById('pause-anim').disabled = true;
+  if (currentFrame == 0) {
+    document.getElementById('first-anim').disabled = true;
+    document.getElementById('back-anim').disabled = true;
+    document.getElementById('last-anim').disabled = false;
+    document.getElementById('next-anim').disabled = false;
+  } else if (currentFrame == countFrame - 1) {
+    document.getElementById('first-anim').disabled = false;
+    document.getElementById('back-anim').disabled = false;
+    document.getElementById('last-anim').disabled = true;
+    document.getElementById('next-anim').disabled = true;
+  }
+  else {
+    document.getElementById('first-anim').disabled = false;
+    document.getElementById('back-anim').disabled = false;
+    document.getElementById('last-anim').disabled = false;
+    document.getElementById('next-anim').disabled = false;
+  }
+}
+
+const playAnim = () => {
+  document.getElementById('play-anim').disabled = false;
+  document.getElementById('pause-anim').disabled = true;
+  while (currentFrame < countFrame - 1) {
+    setTimeout(nextFrame, animTime);
+  }
+  pauseAnim();
+}
+
+const pauseAnim = () => {
+  document.getElementById('play-anim').disabled = true;
+  document.getElementById('pause-anim').disabled = false;
+}
+
+const nextFrame = () => {
+  currentFrame++;
+  updateAnimButtons();
+  updateAnimObject();
+  changeObjectSelected();
+}
+
+const backFrame = () => {
+  currentFrame--;
+  updateAnimButtons();
+  updateAnimObject();
+  changeObjectSelected();
+
+}
+
+function insertAt(array, index, ...elementsArray) {
+  array.splice(index, 0, ...elementsArray);
+}
+
+const firstFrame = () => {
+  currentFrame = 0;
+  updateAnimButtons();
+  updateAnimObject();
+  changeObjectSelected();
+}
+
+const lastFrame = () => {
+  currentFrame = countFrame - 1;
+  updateAnimButtons();
+  updateAnimObject();
+  changeObjectSelected();
+}
+
+const newNextFrame = () => {
+  listObject.forEach(element => {
+    insertAt(element.animframes, currentFrame + 1, rotation);
+    // element.animframes.push(rotation);
+    }
+  );
+  nextFrame();
+}
+
+const newBackFrame = () => {
+  listObject.forEach(element => {
+    insertAt(element.animframes, currentFrame, rotation);
+    // element.animframes.unshift(rotation);
+    }
+  );
+  backFrame();
+}
+
 function drawScene() {
   if (reqAnime) {
     cancelAnimationFrame(reqAnime);
@@ -455,32 +568,32 @@ function drawScene() {
   if (animationActive) {
     listObject.forEach(element => {
       if (element.animation.minAX != element.animation.maxAX) {
-        element.rotation[0] += element.animation.incStart;
-        if (element.rotation[0] == element.animation.maxAX || element.rotation[0] == element.animation.minAX) {
+        element.animframes[currentFrame][0] += element.animation.incStart;
+        if (element.animframes[currentFrame][0] == element.animation.maxAX || element.animframes[currentFrame][0] == element.animation.minAX) {
           element.animation.incStart = -element.animation.incStart;
         }
-        else if (element.rotation[0] > element.animation.maxAX || element.rotation[0] < element.animation.minAX) {
-          element.rotation[0] = 0
+        else if (element.animframes[currentFrame][0] > element.animation.maxAX || element.animframes[currentFrame][0] < element.animation.minAX) {
+          element.animframes[currentFrame][0] = 0
         }
 
       }
       if (element.animation.minAY != element.animation.maxAY) {
-        console.log(element.rotation[1]);
-        element.rotation[1] += element.animation.incStart;
-        if (element.rotation[1] == element.animation.maxAY || element.rotation[1] == element.animation.minAY) {
+        console.log(element.animframes[currentFrame][1]);
+        element.animframes[currentFrame][1] += element.animation.incStart;
+        if (element.animframes[currentFrame][1] == element.animation.maxAY || element.animframes[currentFrame][1] == element.animation.minAY) {
           element.animation.incStart = -element.animation.incStart;
         }
-        else if (element.rotation[1] > element.animation.maxAY || element.rotation[1] < element.animation.minAY) {
-          element.rotation[1] = 0
+        else if (element.animframes[currentFrame][1] > element.animation.maxAY || element.animframes[currentFrame][1] < element.animation.minAY) {
+          element.animframes[currentFrame][1] = 0
         } 
       }
       if (element.animation.minAZ != element.animation.maxAZ) {
-        element.rotation[2] += element.animation.incStart;
-        if (element.rotation[2] == element.animation.maxAZ || element.rotation[2] == element.animation.minAZ) {
+        element.animframes[currentFrame][2] += element.animation.incStart;
+        if (element.animframes[currentFrame][2] == element.animation.maxAZ || element.animframes[currentFrame][2] == element.animation.minAZ) {
           element.animation.incStart = -element.animation.incStart;
         }
-        else if (element.rotation[2] > element.animation.maxAZ || element.rotation[2] < element.animation.minAZ) {
-          element.rotation[2] = 0
+        else if (element.animframes[currentFrame][2] > element.animation.maxAZ || element.animframes[currentFrame][2] < element.animation.minAZ) {
+          element.animframes[currentFrame][2] = 0
         }
       }
     });
@@ -500,9 +613,9 @@ function calculateTransformationMatrix(object) {
   matrix = object.transformationMatrix;
   matrix = m4.translate(matrix, object.translation[0], object.translation[1], object.translation[2]);
   matrix = m4.scale(matrix, object.scale[0], object.scale[1], object.scale[2]);
-  matrix = m4.xRotate(matrix, degToRad(object.rotation[0]));
-  matrix = m4.yRotate(matrix, degToRad(object.rotation[1]));
-  matrix = m4.zRotate(matrix, degToRad(object.rotation[2]));
+  matrix = m4.xRotate(matrix, degToRad(object.animframes[currentFrame][0]));
+  matrix = m4.yRotate(matrix, degToRad(object.animframes[currentFrame][1]));
+  matrix = m4.zRotate(matrix, degToRad(object.animframes[currentFrame][2]));
   return matrix;
 }
 
@@ -569,7 +682,7 @@ function resetDefault() {
   resetAllObject();
   resetComponentTree();
   translation = [0,0,0];
-  rotation = [0,0,0]
+  rotation = [0,0,0];
   scale = [1,1,1];
   cameraPosition = [0, 0, 5];
   document.getElementById("angleX").value = 0;
@@ -727,7 +840,7 @@ function deleteOptionPart() {
 function resetAllObject() {
   listObject.forEach(element => {
     element.translation = [0, 0, 0];
-    element.rotation = [0,0,0];
+    element.animframes[currentFrame] = [0,0,0];
     element.scale = [1, 1, 1];
   });
 }
@@ -744,9 +857,9 @@ function changeObjectSelected() {
       element.translation[0] = translation[0];
       element.translation[1] = translation[1];
       element.translation[2] = translation[2];
-      element.rotation[0] = rotation[0];
-      element.rotation[1] = rotation[1];
-      element.rotation[2] = rotation[2];
+      element.animframes[currentFrame][0] = rotation[0];
+      element.animframes[currentFrame][1] = rotation[1];
+      element.animframes[currentFrame][2] = rotation[2];
       element.scale[0] = scale[0];
       element.scale[1] = scale[1];
       element.scale[2] = scale[2];
@@ -755,21 +868,37 @@ function changeObjectSelected() {
     drawScene();
 }
 
+const updateAnimObject = () => {
+  listObject.forEach(element => {
+    if (element.part == partSelected) {
+      rotation[0] = element.animframes[currentFrame][0];
+      rotation[1] = element.animframes[currentFrame][1];
+      rotation[2] = element.animframes[currentFrame][2];
+      document.getElementById("angleX").value = element.animframes[currentFrame][0];
+      document.getElementById("angleY").value = element.animframes[currentFrame][1];
+      document.getElementById("angleZ").value = element.animframes[currentFrame][2];
+      document.getElementById("angleX-value").innerHTML = element.animframes[currentFrame][0];
+      document.getElementById("angleY-value").innerHTML = element.animframes[currentFrame][1];
+      document.getElementById("angleZ-value").innerHTML = element.animframes[currentFrame][2];
+    }
+  })
+}
+
 function updateUI() {
   listObject.forEach(element => {
     if (element.part == partSelected) {
-      document.getElementById("angleX").value = element.rotation[0];
-      document.getElementById("angleY").value = element.rotation[1];
-      document.getElementById("angleZ").value = element.rotation[2];
+      document.getElementById("angleX").value = element.animframes[currentFrame][0];
+      document.getElementById("angleY").value = element.animframes[currentFrame][1];
+      document.getElementById("angleZ").value = element.animframes[currentFrame][2];
       document.getElementById("scaleX").value = element.scale[0];
       document.getElementById("scaleY").value = element.scale[1];
       document.getElementById("scaleZ").value = element.scale[2];
       document.getElementById("translateX").value = element.translation[0];
       document.getElementById("translateY").value = element.translation[1];
       document.getElementById("translateZ").value = element.translation[2];
-      document.getElementById("angleX-value").innerHTML = element.rotation[0];
-      document.getElementById("angleY-value").innerHTML = element.rotation[1];
-      document.getElementById("angleZ-value").innerHTML = element.rotation[2];
+      document.getElementById("angleX-value").innerHTML = element.animframes[currentFrame][0];
+      document.getElementById("angleY-value").innerHTML = element.animframes[currentFrame][1];
+      document.getElementById("angleZ-value").innerHTML = element.animframes[currentFrame][2];
       document.getElementById("scaleX-value").innerHTML = element.scale[0];
       document.getElementById("scaleY-value").innerHTML = element.scale[1];
       document.getElementById("scaleZ-value").innerHTML = element.scale[2];
@@ -779,9 +908,9 @@ function updateUI() {
       translation[0] = element.translation[0];
       translation[1] = element.translation[1];
       translation[2] = element.translation[2];
-      rotation[0] = element.rotation[0];
-      rotation[1] = element.rotation[1];
-      rotation[2] = element.rotation[2];
+      rotation[0] = element.animframes[currentFrame][0];
+      rotation[1] = element.animframes[currentFrame][1];
+      rotation[2] = element.animframes[currentFrame][2];
       scale[0] = element.scale[0];
       scale[1] = element.scale[1];
       scale[2] = element.scale[2];
