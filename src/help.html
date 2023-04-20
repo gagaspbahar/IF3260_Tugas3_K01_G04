@@ -11,12 +11,27 @@
         <h2>1. Load dan Save Objek</h2>
         <p>Load objek digunakan untuk melakukan load terhadap objek yang dipilih dan Save objek digunakan untuk menyimpan objek yang sudah ada</p>
         <ul>
-            <li>Load : Menekan tombol load kemudian memilih objek dalam bentuk file json pada folder object</li>
-            <li>Save : Menekan tombol save kemudian ojek akan didownload secara otomatis dalam bentuk file json</li>
+            <li>Load : Menekan tombol load kemudian memilih articulated object dalam bentuk file json pada folder object</li>
+            <li>Save : Menekan tombol save kemudian articulated object akan didownload secara otomatis dalam bentuk file json</li>
         </ul>
     </div>  
     <div>
-        <h2>2. View Control</h2>
+        <h2>2. Component Tree</h2>
+        <p>Bagian ini digunakan untuk melakukan select terhadap komponen yang diinginkan untuk dilakukan manipulasi. 
+        Komponen terdiri dari parent-child sesuai articulated model yang dipilih
+        Bagian yang dipilih dapat dimodifikasi seperti Rotasi, Translasi, dan Scaling tanpa mempengaruhi bagian lain.</p>
+    </div> 
+    <div>
+        <h2>3. Texture Mode</h2>
+        <p>Terdapat 3 texture yang dapat digunakan pada object</p>
+        <ul>
+            <li>Image : Tekstur berupa menempel image pada object</li>
+            <li>Environment : Tekstur berupa pantulan lingkungan sekitar object</li>
+            <li>Bump : Tekstur yang memiliki tonjolan dan menghasilkan bayangan pada beberapa titik</li>
+        </ul>
+    </div>
+    <div>
+        <h2>4. View Control</h2>
         <p>Terdapat 3 fitur pada View Control yaitu Angle untuk melakukan rotasi terhadap objek, Translate untuk melakukan translasi terhadap objek dan Scale untuk melakukan scaling objek</p>
         <ul>
             <li>Angle X : mengatur derajat objek terhadap sumbu X</li>
@@ -31,7 +46,7 @@
         </ul>
     </div>
     <div>
-        <h2>3. Camera Control</h2>
+        <h2>5. Camera Control</h2>
         <p>Terdapat 2 fitur yaitu Camera untuk mengubah posisi view terhadap objek dan Camera Radius untuk mengatur radius view</p>
         <ul>
             <li>Camera X : mengubah posisi view terhadap sumbu X</li>
@@ -41,30 +56,21 @@
         </ul>
     </div>
     <div>
-      <h2>4. Tipe Proyeksi</h2>
+      <h2>6. Tipe Proyeksi</h2>
       <p>Terdapat 3 tipe proyeksi yang bisa dipilih yaitu Orthographic, Perspective dan Oblique. Untuk memilih, dapat memakai dropdown yang ada.</p>
     </div>
     <div>
-      <h2>5. Shading</h2>
+      <h2>7. Shading</h2>
       <p>Shading digunakan untuk mengaktifkan atau menonaktifkan efek shading terhadap objek</p>
       <p>Untuk mengaktifkan, klik tombol Toggle Shading.</p>
     </div>
     <div>
-        <h2>6. Animasi</h2>
-        <p>Animasi digunakan untuk melakukan animasi rotasi pada objek. Terdapat 4 tombol untuk animasi yaitu:</p>
-        <ul>
-            <li>Rotate X : melakukan animasi rotasi terhadap sumbu X</li>
-            <li>Rotate Y : melakukan animasi rotasi terhadap sumbu Y</li>
-            <li>Rotate Z : melakukan animasi rotasi terhadap sumbu Z</li>
-            <li>Toggle Animation : mengaktifkan atau menonaktifkan animasi</li>
-        </ul>
+        <h2>8. Animasi</h2>
+        <p>Animasi digunakan untuk melakukan animasi yang telah ditetapkan pada articulated model yang dipilih</p>
     </div>
     <div>   
-        <h2>7. Reset Default</h2>
+        <h2>9. Reset Default</h2>
         <p>Reset Default digunakan untuk mengembalikan pengaturan objek ke awal</p>
     </div>
-    <div>
-        <h2>8. Spek Lanjutan</h2>
-        <p>Spek Lanjutan</p>
   </body>
 </html>
