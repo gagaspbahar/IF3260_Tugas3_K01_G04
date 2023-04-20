@@ -455,11 +455,8 @@ function calculateTransformationMatrix(object) {
 }
 
 function draw(rootNode, lastModelMatrix) {
-  console.log(listObject)
-  console.log(rootNode)
   if (rootNode != null) {
     var objectSelected = findObjectByPart(rootNode.root);
-    console.log(objectSelected)
     var matrix = calculateTransformationMatrix(objectSelected)
     var modelMatrix = m4.multiply(lastModelMatrix, matrix);
     renderSingleNode(objectSelected, modelMatrix)
