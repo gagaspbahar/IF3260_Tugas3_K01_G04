@@ -620,7 +620,7 @@ function loadEnvironmentTexture(){
 //   window.onload = loadEnvironmentTexture();
 // }
 window.onload = loadEnvironmentTexture();
-window.onload = loadTexture("./assets/noodles.jpg");
+window.onload = loadTexture("./assets/wood.png");
 
 
 function addOptionPart() {
