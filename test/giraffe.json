@@ -381,7 +381,7 @@
                 "maxAY": 0,
                 "minAZ": 0,
                 "maxAZ": 0,
-                "incStart": 0.5
+                "incStart": -0.5
             }
         },
         {
@@ -452,7 +452,7 @@
                 "maxAY": 0,
                 "minAZ": 0,
                 "maxAZ": 0,
-                "incStart": 0.5
+                "incStart": -0.5
             }
         },
         {
