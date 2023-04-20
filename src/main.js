@@ -1,6 +1,7 @@
 var vertices = [];
 var indices = defaultIndices;
 var articulatedModel = defaultModel;
+var uv = defaultuv;
 var colors = [];
 var normals = [];
 var texcoords = [];
@@ -73,6 +74,11 @@ var viewLocation = gl.getUniformLocation(program, "u_view");
 var worldLocation = gl.getUniformLocation(program, "u_world");
 var textureEnvirontment = gl.getUniformLocation(program, "u_env_texture");
 var worldCameraPositionLocation = gl.getUniformLocation(program, "u_worldCameraPosition");
+
+var attr_pos = gl.getAttribLocation(program, "a_pos");
+var attr_tang = gl.getAttribLocation(program, "a_tang");
+var attr_bitang = gl.getAttribLocation(program, "a_bitang");
+var attr_uv = gl.getAttribLocation(program, "a_uv");
 
 // Set viewport
 gl.viewport(0, 0, canvas.width, canvas.height);
@@ -263,7 +269,10 @@ function render(vertice, color, texcoord) {
   else if (textureOption == 1){
     gl.uniform1i(textureImage, 1);
     gl.uniform1i(textureEnvirontment, 0);
-  }
+  } else if (textureOption == 2){
+    gl.uniform1i(textureImage, 0);
+    gl.uniform1i(textureEnvirontment, 1);
+  } 
 
   const indicesBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesBuffer);
@@ -272,6 +281,28 @@ function render(vertice, color, texcoord) {
     new Uint16Array(indices),
     gl.STATIC_DRAW
   );
+
+  var posBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+  gl.vertexAttribPointer(attr_pos, 3, gl.FLOAT, false, 0, 0);
+
+  var tangentBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, tangentBuffer);
+  gl.vertexAttribPointer(attr_tang, 3, gl.FLOAT, false, 0, 0);
+
+  var bitangentBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, bitangentBuffer);
+  gl.vertexAttribPointer(attr_bitang, 3, gl.FLOAT, false, 0, 0);
+
+  var uvBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uv), gl.STATIC_DRAW);
+  gl.vertexAttribPointer(attr_uv, 2, gl.FLOAT, false, 0, 0);
+
+  gl.enableVertexAttribArray(attr_pos);
+  gl.enableVertexAttribArray(attr_tang);
+  gl.enableVertexAttribArray(attr_bitang);
+  gl.enableVertexAttribArray(attr_uv);
 }
 
 function loadModel() {
@@ -648,13 +679,22 @@ function loadEnvironmentTexture(){
   gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
 }
 
-// if (textureOption == 0){
-//   window.onload = loadTexture("./assets/noodles.jpg");
-// } else if (textureOption == 1){
-//   window.onload = loadEnvironmentTexture();
+// function init(){
+//   if (textureOption == 0){
+//     loadTexture("./assets/wood.png");
+//   } else if (textureOption == 1){
+//     loadEnvironmentTexture();
+//   } else if (textureOption == 2){
+//     loadTexture("./assets/bump_normal.png");
+//   }
 // }
-window.onload = loadEnvironmentTexture();
+
+// Image
 window.onload = loadTexture("./assets/wood.png");
+// Environment
+window.onload = loadEnvironmentTexture();
+// Bump
+//window.onload = loadTexture("./assets/bump_normal.png");
 
 
 function addOptionPart() {

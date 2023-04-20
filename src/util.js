@@ -449,6 +449,27 @@ const defaultIndices = [
   20, 21, 22,     20, 22, 23,   // left
 ];
 
+const defaultuv = [
+    // Front
+    0, 1, 1, 0, 0, 0,
+    0, 1, 1, 1, 1, 0,
+    // Back
+    0, 1, 1, 0, 0, 0,
+    0, 1, 1, 1, 1, 0,
+    // Left
+    0, 1, 1, 0, 0, 0,
+    0, 1, 1, 1, 1, 0,
+    // Right
+    0, 1, 1, 0, 0, 0,
+    0, 1, 1, 1, 1, 0,
+    // Top
+    0, 1, 1, 0, 0, 0,
+    0, 1, 1, 1, 1, 0,
+    // Bottom
+    0, 1, 1, 0, 0, 0,
+    0, 1, 1, 1, 1, 0,
+]
+
 function matrixMultiplication(matrixA, matrixB) {
     const result = [];
     for (let i = 0; i < matrixA.length; i++) {
