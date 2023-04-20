@@ -519,7 +519,6 @@ function recursiveTransformation(rootNode, nodeName, lastModelMatrix, ans) {
     }
     var objectSelected = findObjectByPart(rootNode.root);
     var matrix = calculateTransformationMatrix(objectSelected)
-    console.log(rootNode, matrix, lastModelMatrix)
     var modelMatrix = m4.multiply(lastModelMatrix, matrix);
     if (rootNode.root == nodeName) {
         ans.value = modelMatrix;

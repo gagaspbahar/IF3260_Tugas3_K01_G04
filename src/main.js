@@ -465,7 +465,6 @@ function drawScene() {
 
       }
       if (element.animation.minAY != element.animation.maxAY) {
-        console.log(element.rotation[1]);
         element.rotation[1] += element.animation.incStart;
         if (element.rotation[1] == element.animation.maxAY || element.rotation[1] == element.animation.minAY) {
           element.animation.incStart = -element.animation.incStart;
